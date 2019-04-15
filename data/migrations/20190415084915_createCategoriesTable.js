@@ -1,6 +1,6 @@
 
 // adding note to make changes
-exports.up = function (knex, Promise) {
+exports.up = function (knex) {
   return knex.schema.createTable('categories', table => {
     table.increments('category_id');
 
@@ -8,6 +8,6 @@ exports.up = function (knex, Promise) {
   });
 };
 
-exports.down = function (knex, Promise) {
+exports.down = function (knex) {
   return knex.schema.dropTableIfExists('categories');
 };

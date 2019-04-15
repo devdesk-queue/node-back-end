@@ -1,11 +1,11 @@
 // adding note to make changes
 
-exports.up = function (knex, Promise) {
+exports.up = function (knex) {
   return knex.schema.createTable('tickets', table => {
     table.increments('ticket_id');
 
     // predefined set of options: inQueue/opened/resolved
-    table.string('status', 128);
+    table.string('status', 128).defaultTo('inQueue');
 
     table.string('title', 256).notNullable();
 
@@ -35,6 +35,6 @@ exports.up = function (knex, Promise) {
   });
 };
 
-exports.down = function (knex, Promise) {
+exports.down = function (knex) {
   return knex.schema.dropTableIfExists('tickets');
 };
