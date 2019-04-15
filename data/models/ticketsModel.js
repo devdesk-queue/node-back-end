@@ -6,6 +6,8 @@ module.exports = {
   getTicketCatRelationships,
   getAllCategories,
   postNewTicket,
+  getTicketById,
+  updateTicket,
 };
 
 async function getTicketsWithCats() {
@@ -38,6 +40,12 @@ function getAllTickets() {
   return db('tickets');
 }
 
+function getTicketById(id) {
+  return db('tickets')
+    .where('ticket_id', id)
+    .first();
+}
+
 function getTicketCatRelationships() {
   return db('categorized_tickets');
 }
@@ -48,4 +56,11 @@ function getAllCategories() {
 
 function postNewTicket(payload) {
   return db('tickets').insert(payload);
+}
+
+function updateTicket(payload) {
+  const { status, admin_id, ticket_id } = payload;
+  return db('tickets')
+    .where({ ticket_id })
+    .update({ status, admin_id });
 }

@@ -4,9 +4,9 @@ This repository will server as the backend server for the devdesk queue applicat
 
 # API documentation
 
-## Tickets
+# Resource: Tickets
 
-### [GET] all tickets
+## [GET] all tickets
 
 **URL:** /api/tickets
 
@@ -34,7 +34,7 @@ Example:
 ]
 ```
 
-### [POST] new ticket
+## [POST] new ticket
 
 **URL:** /api/tickets
 
@@ -50,3 +50,19 @@ Example:
 ```
 
 **Returns:** an array with new ticket ID. (can be changed)
+
+## [PUT] ticket
+
+**URL:** /api/tickets/:id
+
+**Payload:** an object with the `status` and `user_id` property.
+Valid `status` values are "inQueue", "opened", "resolved" strings.
+
+```
+{
+  status: "inQueue", // Required
+  user_id: 1         // Integer, Required
+}
+```
+
+**Returns:** number of edited resources. (can be changed)
