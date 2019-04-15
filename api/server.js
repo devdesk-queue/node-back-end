@@ -1,27 +1,10 @@
-const express = require('express');
-const middleware = require('./middleware/middleware');
-const ticketsRouter = require('./routing/tickets');
-const { serverError } = require('./middleware/error');
-require('dotenv').config();
-// adding note to make changes
+// Handle async catch errors from one source.
+require('express-async-errors');
 
+const server = require('express')();
 
-// Define variables
-const app = express();
-const ticketsUrl = '/api/tickets';
+require('../middleware')(server);
 
-// Middleware
-middleware(app);
+require('../routes')(server);
 
-// Default "home" route to check if the API is working
-app.get('/', (req, res) => {
-  res.status(200).json('API is live');
-});
-
-// Routes
-app.use(ticketsUrl, ticketsRouter);
-
-// Error handler middleware
-app.use(serverError);
-
-module.exports = app;
+module.exports = server;
