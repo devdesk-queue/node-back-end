@@ -1,4 +1,7 @@
-const db = require('../knexConfig');
+const Joi = require('joi');
+const db = require('../data/db');
+
+// The categories should probably be in a separate model from tickets.
 
 module.exports = {
   getTicketsWithCats,
@@ -8,6 +11,7 @@ module.exports = {
   postNewTicket,
   getTicketById,
   updateTicket,
+  schema
 };
 
 async function getTicketsWithCats() {
@@ -63,4 +67,17 @@ function updateTicket(payload) {
   return db('tickets')
     .where({ ticket_id })
     .update({ status, admin_id });
+}
+
+function schema(ticket) {
+  const schema = Joi.object().keys({
+    status: Joi.string().max(128),
+    title: Joi.string().max(256).required(),
+    description: Joi.string().required(),
+    tried: Joi.string(),
+    student_id: Joi.number().integer(),
+    admin_id: Joi.number().integer()
+  });
+
+  return Joi.validate(ticket, schema);
 }
