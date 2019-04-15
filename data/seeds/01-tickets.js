@@ -1,8 +1,10 @@
-exports.seed = function(knex, Promise) {
+exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
+  // adding note to make changes
+
   return knex('tickets')
     .del()
-    .then(function() {
+    .then(function () {
       // Inserts seed entries
       return knex('tickets').insert([
         {

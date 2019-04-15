@@ -1,3 +1,5 @@
+// adding note to make changes
+
 module.exports = {
   development: {
     client: 'sqlite3',

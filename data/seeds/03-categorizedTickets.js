@@ -1,8 +1,10 @@
-exports.seed = function(knex, Promise) {
+exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
+  // adding note to make changes
+
   return knex('categorized_tickets')
     .del()
-    .then(function() {
+    .then(function () {
       // Inserts seed entries
       return knex('categorized_tickets').insert([
         { cat_tic_id: 1, ticket_id: 1, category_id: 2 },
