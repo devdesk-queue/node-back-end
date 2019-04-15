@@ -5,6 +5,7 @@ module.exports = {
   getAllTickets,
   getTicketCatRelationships,
   getAllCategories,
+  postNewTicket,
 };
 
 async function getTicketsWithCats() {
@@ -43,4 +44,8 @@ function getTicketCatRelationships() {
 
 function getAllCategories() {
   return db('categories');
+}
+
+function postNewTicket(payload) {
+  return db('tickets').insert(payload);
 }
