@@ -1,6 +1,7 @@
-const app = require('./api/server');
+const server = require('./api/server');
 
-const PORT = process.env.PORT || 9000;
-app.listen(PORT, () => {
-  console.log(`=== Express app is live on port:${PORT} ===`);
+const port = process.env.port || 9000;
+
+server.listen(port, () => {
+  console.log('=== Listening on port %d in %s mode ===', port, server.settings.env);
 });
