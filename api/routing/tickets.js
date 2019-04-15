@@ -1,6 +1,6 @@
 const express = require('express');
 const DB = require('../../data/models/ticketsModel');
-
+// adding note to make changes
 const router = express.Router();
 
 /**
@@ -60,10 +60,10 @@ router.post('/', async (req, res, next) => {
  */
 
 /*
-As a helper I want to be able to assign a ticket to myself by clicking 
+As a helper I want to be able to assign a ticket to myself by clicking
   a ""help student"" button.
 As a helper I want to be able to mark the ticket as ""resolved""
-  As a helper I want to be able to re-assign the ticket back to the 
+  As a helper I want to be able to re-assign the ticket back to the
 queue if I cannot resolve the ticket.
 */
 
