@@ -1,6 +1,6 @@
 
-
-require('dotenv').config();
+// this breaks it, no clue why.. find out later
+// require('dotenv').config();
 
 const server = require('./api/server');
 const port = process.env.PORT;
