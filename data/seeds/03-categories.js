@@ -61,4 +61,4 @@ const validCategories = [
   'Build Week: Back End',
 ];
 
-module.exports = validCategories;
+exports.validCategories = validCategories;

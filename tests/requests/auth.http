@@ -1,0 +1,20 @@
+@url = http://localhost:9000/api/auth
+
+POST {{url}}/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "super22unicorndragon@55"
+}
+
+###
+
+POST {{url}}/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "username": "mr. kitty",
+  "password": "purr"
+}

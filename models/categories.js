@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const db = require('../data/db');
-const validCategories = require('../data/seeds/03-categories');
+const { validCategories } = require('../data/seeds/03-categories');
 
 module.exports = {
   add: cat => db('categories').insert(cat),
