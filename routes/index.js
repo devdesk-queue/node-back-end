@@ -5,7 +5,7 @@ module.exports = server => {
   server.use(logger);
 
   server.use('/api/tickets', tickets);
-  server.get('/api', (req, res) => {
+  server.get('/', (req, res) => {
     res.status(200).json('API is live!');
   });
 
