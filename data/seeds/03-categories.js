@@ -1,12 +1,12 @@
 exports.seed = function (knex) {
   return knex('categories').insert(
-    webTkCategories.map(cat => {
+    validCategories.map(cat => {
       return { name: cat };
     })
   );
 };
 
-const webTkCategories = [
+const validCategories = [
   'User Interface I',
   'User Interface II',
   'User Interface III',
@@ -60,3 +60,5 @@ const webTkCategories = [
   'Testing IV',
   'Build Week: Back End',
 ];
+
+module.exports = validCategories;
