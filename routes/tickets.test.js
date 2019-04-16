@@ -6,16 +6,16 @@ const Tickets = require('../models/tickets');
 describe('Tickets route', () => {
   beforeAll(async () => {
     await Tickets.add({
-      'title': 'Please help',
+      'title': 'First ticket',
       'description': 'I need help',
       'tried': 'I tried this....',
       'student_id': 2,
     });
 
     await Tickets.add({
-      'title': 'Please help again',
-      'description': 'I need help again',
-      'tried': 'I tried everything',
+      'title': 'Second ticket',
+      'description': 'I need help',
+      'tried': 'I tried this....',
       'student_id': 2,
     });
   });
@@ -77,7 +77,7 @@ describe('Tickets route', () => {
       return request(server)
         .post('/api/tickets')
         .send({
-          'title': 'Unfinished ticket',
+          'title': 'Third ticket',
           'description': 'I need help',
           'tried': 'I tried this....',
           'student_id': 3,
@@ -89,7 +89,7 @@ describe('Tickets route', () => {
       await request(server)
         .post('/api/tickets')
         .send({
-          'title': 'Unfinished ticket',
+          'title': 'Fourth ticket',
           'description': 'I need help',
           'tried': 'I tried this....',
           'student_id': 3,
@@ -102,12 +102,35 @@ describe('Tickets route', () => {
       const ticket = await request(server)
         .post('/api/tickets')
         .send({
-          'title': 'Awesome ticket',
+          'title': 'Fifth ticket',
           'description': 'I need help',
           'tried': 'I tried this....',
           'student_id': 3,
         });
-      expect(ticket.body.title).toBe('Awesome ticket');
+      expect(ticket.body.title).toBe('Fifth ticket');
+    });
+  });
+
+  describe('PUT ticket by id. /api/tickets/:id', () => {
+    it('responds with Status Code 200 on success', () => {
+      return request(server)
+        .put('/api/tickets/1')
+        .send({ 'status': 'opened', 'admin_id': 1 })
+        .expect(200);
+    });
+
+    it('responds with Status Code 404 if the ticket does not exist', () => {
+      return request(server)
+        .put('/api/tickets/0')
+        .send({ 'status': 'opened', 'admin_id': 1 })
+        .expect(404);
+    });
+
+    it('returns single ticket object', async () => {
+      const ticket = await request(server)
+        .put('/api/tickets/1')
+        .send({ 'status': 'resolved', 'admin_id': 1 });
+      expect(ticket.body).toHaveProperty('id', 1);
     });
   });
 });
