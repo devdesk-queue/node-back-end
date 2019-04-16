@@ -46,7 +46,7 @@ Example:
   "title": "Please help",                 // string, max 256 chars, required
   "description": "I need help",           // string, required
   "tried": "I tried this....",            // string, optional
-  "category": "JavaScript I",             // string, optional
+  "category": "JavaScript I",             // string, required
   "student_id": 2,                        // integer, required
 }
 ```
