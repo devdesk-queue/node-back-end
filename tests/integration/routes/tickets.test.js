@@ -1,8 +1,7 @@
-const server = require('../api/server');
+const server = require('../../../api/server');
 const request = require('supertest');
-const Tickets = require('../models/tickets');
-const Categories = require('../models/categories');
-
+const Tickets = require('../../../models/tickets');
+const Categories = require('../../../models/categories');
 
 describe('Tickets route', () => {
   beforeAll(async () => {
