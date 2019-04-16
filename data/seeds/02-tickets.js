@@ -1,4 +1,4 @@
-exports.seed = function(knex) {
+exports.seed = function (knex) {
   return knex('tickets').insert([
     {
       status: 'resolved',
@@ -17,6 +17,7 @@ exports.seed = function(knex) {
       admin_id: 1
     },
     {
+      status: 'inQueue',
       title: 'problem3',
       description: 'big problem',
       tried: 'cry',
@@ -24,6 +25,7 @@ exports.seed = function(knex) {
       admin_id: null
     },
     {
+      status: 'inQueue',
       title: 'problem4',
       description: 'big problem',
       tried: 'cry',
