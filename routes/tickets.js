@@ -1,5 +1,7 @@
 const validate = require('../middleware/validate');
 const Tickets = require('../models/tickets');
+const Categories = require('../models/categories');
+const CategorizedTickets = require('../models/categorizedTickets');
 const router = require('express').Router();
 
 /**
@@ -13,9 +15,20 @@ const router = require('express').Router();
  * @returns - an array with new ticket ID
 */
 router.post('/', validate(Tickets.schema), async ({ body: newTicket }, res) => {
+  // take out category from body into separate variable
+  const categoryName = newTicket.category;
+  delete newTicket.category;
+
   const [ticketID] = await Tickets.add(newTicket);
-  const [ticket] = await Tickets.get(ticketID);
-  res.status(201).json(ticket);
+  const category = await Categories.getByName(categoryName);
+  if (category) {
+    // create new ticket-category relationship
+    await CategorizedTickets.add(ticketID, category.id);
+    const [ticket] = await Tickets.get(ticketID);
+    res.status(201).json(ticket);
+  } else {
+    res.status(404).json({ message: 'This category does not exist' });
+  }
 });
 
 /**
