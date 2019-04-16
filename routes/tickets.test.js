@@ -1,6 +1,7 @@
 const server = require('../api/server');
 const request = require('supertest');
 const Tickets = require('../models/tickets');
+const Categories = require('../models/categories');
 
 
 describe('Tickets route', () => {
@@ -18,10 +19,15 @@ describe('Tickets route', () => {
       'tried': 'I tried this....',
       'student_id': 2,
     });
+
+    await Categories.add({
+      'name': 'JavaScript IV',
+    });
   });
 
   afterAll(async () => {
     await Tickets.clear();
+    await Categories.clear();
   });
 
   it('is in the right environment', () => {
@@ -81,6 +87,7 @@ describe('Tickets route', () => {
           'description': 'I need help',
           'tried': 'I tried this....',
           'student_id': 3,
+          'category': 'JavaScript IV',
         })
         .expect(201);
     });
@@ -93,6 +100,7 @@ describe('Tickets route', () => {
           'description': 'I need help',
           'tried': 'I tried this....',
           'student_id': 3,
+          'category': 'JavaScript IV',
         });
       const tickets = await Tickets.get();
       expect(tickets).toHaveLength(4);
@@ -106,6 +114,7 @@ describe('Tickets route', () => {
           'description': 'I need help',
           'tried': 'I tried this....',
           'student_id': 3,
+          'category': 'JavaScript IV',
         });
       expect(ticket.body.title).toBe('Fifth ticket');
     });

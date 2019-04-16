@@ -27,7 +27,7 @@ module.exports = {
       tried: Joi.string(),
       student_id: Joi.number().integer().positive(),
       admin_id: Joi.number().integer().positive(),
-      category: Joi.string()
+      category: Joi.string().required()
     });
     return Joi.validate(cat, schema);
   }
