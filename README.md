@@ -15,21 +15,21 @@ Example:
 
 ```
 [
-    {
-        "ticket_id": 1,
-        "status": "resolved",
-        "title": "problem1",
-        "description": "big problem",
-        "tried": "cry",
-        "student_id": 2,
-        "admin_id": 1,
-        "created_at": "2019-04-15 07:16:35",
-        "updated_at": "2019-04-15 07:16:35",
-        "categories": [
-            "Administration",
-            "ISA"
-        ]
-    },
+  {
+    "ticket_id": 1,
+    "status": "resolved",
+    "title": "problem1",
+    "description": "big problem",
+    "tried": "cry",
+    "student_id": 2,
+    "admin_id": 1,
+    "created_at": "2019-04-15 07:16:35",
+    "updated_at": "2019-04-15 07:16:35",
+    "categories": [
+        "Administration",
+        "ISA"
+    ]
+  },
 ]
 ```
 
@@ -37,18 +37,21 @@ Example:
 
 **URL:** /api/tickets
 
-**Payload:** an object with the following properties:
+**Payload:** an object with the following properties.
+
+*Category* can be a string from pre-selected list!
 
 ```
 {
   "title": "Please help",                 // string, max 256 chars, required
   "description": "I need help",           // string, required
   "tried": "I tried this....",            // string, optional
+  "category": "JavaScript I",             // string, required
   "student_id": 2,                        // integer, required
 }
 ```
 
-**Returns:** an array with new ticket ID. (can be changed)
+**Returns:** new ticket object.
 
 ## [PUT] ticket
 
@@ -64,4 +67,4 @@ Valid `status` values are "inQueue", "opened", "resolved" strings.
 }
 ```
 
-**Returns:** number of edited resources. (can be changed)
+**Returns:** updated ticket object.
