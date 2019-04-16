@@ -3,6 +3,60 @@ This repository will server as the backend server for the devdesk queue applicat
 
 # API documentation
 
+# Resource: Authentication
+
+## [POST] registration
+
+**URL:** /api/auth/register
+
+**Payload:** an object with the following properties.
+
+```
+{
+  "email": "test@example.com",
+  "username": "mr. kitty",
+  "password": "purr"
+}
+```
+
+Returns an object with new user data.
+
+Example:
+
+```
+{
+  "id": 6,
+  "email": "test@example.com",
+  "username": "mr. kitty",
+  "admin": false,
+  "created_at": "2019-04-16 18:43:41"
+}
+```
+
+## [POST] login
+
+**URL:** /api/auth/login
+
+**Payload:** an object with the following properties.
+
+```
+{
+  "username": "mr. kitty",
+  "password": "purr"
+}
+```
+
+Returns an object with user token.
+
+Example:
+
+```
+{
+  "message": "Welcome, admin!",
+  "token": "<hidden>"
+}
+```
+
 # Resource: Tickets
 
 ## [GET] all tickets
