@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 const express = require('express');
 
 const server = express();
@@ -8,7 +8,7 @@ server.get('/', (req, res) => {
 });
 
 // const server = require('./api/server');
-const port = process.env.PORT;
+const port = process.env.PORT || 9000;
 
 
 
