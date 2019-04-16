@@ -1,6 +1,5 @@
 // Handle async catch errors from one source.
 require('express-async-errors');
-require('dotenv').config();
 
 const server = require('express')();
 
