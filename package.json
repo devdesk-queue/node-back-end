@@ -8,7 +8,7 @@
     "test": "cross-env NODE_ENV=testing jest --watch --verbose",
     "server": "nodemon",
     "migrate": "knex migrate:latest",
-    "migrate_test": "knex migrate:latest --env=testing",
+    "migrate_test": "cross-env NODE_ENV=testing knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run"
   },
@@ -43,6 +43,8 @@
   },
   "devDependencies": {
     "dotenv": "^7.0.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-jest": "^22.4.1",
     "jest": "^24.7.1",
     "knex-cleaner": "^1.1.4",
     "nodemon": "^1.18.11",
