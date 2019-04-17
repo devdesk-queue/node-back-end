@@ -6,7 +6,7 @@ exports.seed = knex =>
       email: 'devdeskapp@gmail.com',
       username: 'admin',
       password: bcrypt.hashSync('super22unicorndragon@55', 10),
-      admin: true
+      role: 'admin'
     },
     {
       email: 'pavos@example.com',

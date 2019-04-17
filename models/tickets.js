@@ -4,8 +4,9 @@ const db = require('../data/db');
 
 module.exports = {
   add: cat => db('tickets').insert(cat),
-  get: async (id) => {
-    let query = db('tickets'); if (id) query = query.where({ id });
+  get: async id => {
+    let query = db('tickets');
+    if (id) query = query.where({ id });
 
     const tickets = await query;
 
@@ -16,19 +17,29 @@ module.exports = {
     return tickets;
   },
   filter: query => db('tickets').where(query),
-  update: (id, changes) => db('tickets').where({ id }).update(changes),
-  remove: id => db('tickets').where({ id }).del(),
+  update: (id, changes) =>
+    db('tickets')
+      .where({ id })
+      .update(changes),
+  remove: id =>
+    db('tickets')
+      .where({ id })
+      .del(),
   clear: () => db('tickets').truncate(),
-  schema: cat => {
-    const schema = Joi.object().keys({
+  schema: (cat, post) => {
+    let schema = {
       status: Joi.string().valid('inQueue', 'opened', 'resolved'),
+      admin_id: Joi.number().integer().positive()
+    };
+
+    if (post) schema = Object.assign(schema, {
       title: Joi.string().max(256).required(),
       description: Joi.string().required(),
       tried: Joi.string(),
       student_id: Joi.number().integer().positive(),
-      admin_id: Joi.number().integer().positive(),
       category: Joi.string().required()
     });
+
     return Joi.validate(cat, schema);
   }
 };

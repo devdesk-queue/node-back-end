@@ -3,26 +3,32 @@ const Users = require('../../../models/users');
 
 describe('tickets', () => {
   beforeAll(async() => {
+    await Tickets.clear();
+    await Users.clear();
+
     await Users.add({
       email: 'devdeskapp@gmail.com',
       username: 'admin',
       password: 'super22unicorndragon@55',
-      admin: true
+      role: 'admin'
     });
+
     await Users.add({
       email: 'pavos@example.com',
       username: 'pav0s',
       password: 'yeeyee'
     });
+
     await Users.add({
       email: 'macbethjonathan@gmail.com',
       username: 'macjabeth',
       password: 'supersecurepasswd'
     });
   });
+
   afterAll(async () => {
-    Tickets.clear();
-    Users.clear();
+    await Tickets.clear();
+    await Users.clear();
   });
 
   it('should add new tickets', async () => {

@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
         console.error(err);
         res.status(401).json({ message: 'Invalid Credentials' });
       } else {
-        req.decoded = decoded;
+        req.user = decoded;
         next();
       }
     });

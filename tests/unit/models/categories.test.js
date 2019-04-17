@@ -1,9 +1,8 @@
 const Categories = require('../../../models/categories');
 
 describe('categories', () => {
-  afterAll(async () => {
-    Categories.clear();
-  });
+  beforeAll(async () => { await Categories.clear(); });
+  afterAll(async () => { await Categories.clear(); });
 
   it('should add new categories', async () => {
     await Categories.add({ name: 'React' });

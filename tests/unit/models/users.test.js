@@ -1,16 +1,15 @@
 const Users = require('../../../models/users');
 
 describe('users', () => {
-  afterAll(async () => {
-    Users.clear();
-  });
+  beforeAll(async () => { await Users.clear(); });
+  afterAll(async () => { await Users.clear(); });
 
   it('should add new users', async () => {
     await Users.add({
       email: 'devdeskapp@gmail.com',
       username: 'admin',
       password: 'super22unicorndragon@55',
-      admin: true
+      role: 'admin'
     });
     await Users.add({
       email: 'pavos@example.com',
@@ -30,7 +29,7 @@ describe('users', () => {
   it('should find a user', async () => {
     const [user] = await Users.filter({ username: 'admin' });
     expect(user).toBeDefined();
-    expect(user).toHaveProperty('admin', 1);
+    expect(user).toHaveProperty('role');
   });
 
   it('should update a user', async () => {

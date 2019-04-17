@@ -1,5 +1,3 @@
-// adding note to make changes
-
 exports.up = knex =>
   knex.schema.createTable('tickets', table => {
     table.increments();
@@ -15,19 +13,14 @@ exports.up = knex =>
     table.text('tried');
 
     // student who created the ticket
-    table.integer('student_id')
-      .notNullable()
-      .references('users.id')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+    table.integer('student_id').unsigned().notNullable();
+    table.foreign('student_id').references('users.id');
 
     // do we want user or admin deletion to delete the created ticket?
 
     // if not assigned = the ticket is still in the queue
-    table.integer('admin_id')
-      .references('users.id')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+    table.integer('admin_id').unsigned();
+    table.foreign('admin_id').references('users.id');
 
     table.timestamps(true, true);
   });
