@@ -51,7 +51,8 @@ router.post('/login', validate(schema), async ({ body: creds }, res) => {
     const token = generateToken(user);
     res.status(200).json({
       message: `Welcome, ${username}!`,
-      token
+      token,
+      id: user.id,
     });
   } else {
     res.status(401).json({ message: 'Invalid Credentials' });

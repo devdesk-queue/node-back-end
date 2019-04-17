@@ -9,14 +9,14 @@ module.exports = {
     if (id) query = query.where({ id });
 
     // select everything but the password
-    query = query.select(
-      'id',
-      'email',
-      'username',
-      'role',
-      'created_at',
-      'updated_at'
-    );
+    // query = query.select(
+    //   'id',
+    //   'email',
+    //   'username',
+    //   'role',
+    //   'created_at',
+    //   'updated_at'
+    // );
 
     return query;
   },
@@ -27,14 +27,14 @@ module.exports = {
   schema: (cat, post) => {
     const schema = post
       ? Joi.object().keys({
-          email: Joi.string().email().max(255),
-          password: Joi.string().max(255)
-        })
+        email: Joi.string().email().max(255),
+        password: Joi.string().max(255)
+      })
       : Joi.object().keys({
-          email: Joi.string().email().max(255).required(),
-          username: Joi.string().max(255).required(),
-          password: Joi.string().max(255).required()
-        });
+        email: Joi.string().email().max(255).required(),
+        username: Joi.string().max(255).required(),
+        password: Joi.string().max(255).required()
+      });
 
     return Joi.validate(cat, schema);
   }
