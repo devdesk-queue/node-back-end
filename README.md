@@ -1,6 +1,3 @@
-# node-back-end
-This repository will server as the backend server for the devdesk queue application
-
 # API documentation
 
 # Resource: Authentication
@@ -61,6 +58,7 @@ Example:
   "token": "<hidden>"
 }
 ```
+
 
 # Resource: Tickets
 
@@ -170,6 +168,7 @@ Valid `status` values are "inQueue", "opened", "resolved" strings.
 
 **Returns:** updated ticket object.
 
+
 # Resource: Categories
 
 
@@ -181,7 +180,7 @@ Returns an array of categories objects.
 
 Example:
 
-```
+```json
 [
   {
     "id": 1,
@@ -236,6 +235,98 @@ Example:
 ```json
 { 
   "message": "Category was deleted."
+}
+```
+
+
+# Resource: Users
+
+
+## [GET] all users
+
+**URL:** /api/users
+
+Returns an array of user objects.
+
+Example:
+
+```json
+[ 
+  {
+    "id": 4,
+    "email": "omar@kittycuddlers.net",
+    "username": "kittycuddler",
+    "password": "$2a$10$msOd.CoK6PEk9hcq7/Ss0uoscsKkPy2N9faxvyxrCPixFqFSLIyvO",
+    "role": "student",
+    "created_at": "2019-04-17 06:41:38"
+  },
+  {
+      "id": 5,
+      "email": "whiskers@example.com",
+      "username": "mrKitty",
+      "password": "$2a$10$7HaI6cU9rViU6mbYZrP0rOgc4hTH166r/iYXqrI/WKyQqtgHgHTZq",
+      "role": "student",
+      "created_at": "2019-04-17 06:54:30"
+  }
+]
+```
+
+
+## [GET] user by ID
+
+**URL:** /api/users/:id
+
+Returns a user object.
+
+Example:
+
+```json
+{
+  "id": 5,
+  "email": "whiskers@example.com",
+  "username": "mrKitty",
+  "role": "student",
+  "created_at": "2019-04-17 06:54:30"
+}
+```
+
+
+## [PUT] edit user
+
+**URL:** /api/users/:id
+
+**Payload:** an object with one or both following properties.
+
+```json
+{
+  "password": "newSecretPasswordOver9000!",
+  "email": "joe@test.com"
+}
+```
+
+**Returns:** updated user object.
+
+```json
+{
+  "id": 6,
+  "email": "joe@test.com",
+  "username": "Joe",
+  "role": "student",
+  "created_at": "2019-04-17 10:06:14"
+}
+```
+
+
+
+## [DELETE] user
+
+**URL:** /api/users/:id
+
+**Returns:** success message.
+
+```json
+{ 
+  "message": "User was deleted."
 }
 ```
 

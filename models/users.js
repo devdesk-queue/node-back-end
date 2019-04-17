@@ -12,12 +12,18 @@ module.exports = {
   update: (id, changes) => db('users').where({ id }).update(changes),
   remove: id => db('users').where({ id }).del(),
   clear: () => db('users').truncate(),
-  schema: cat => {
-    const schema = Joi.object().keys({
-      email: Joi.string().email().max(255).required(),
-      username: Joi.string().max(255).required(),
-      password: Joi.string().max(255).required(),
-    });
+  schema: (cat, post) => {
+    const schema = post ?
+      Joi.object().keys({
+        email: Joi.string().email().max(255),
+        password: Joi.string().max(255),
+      })
+      :
+      Joi.object().keys({
+        email: Joi.string().email().max(255).required(),
+        username: Joi.string().max(255).required(),
+        password: Joi.string().max(255).required(),
+      });
     return Joi.validate(cat, schema);
   }
 };
