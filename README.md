@@ -330,3 +330,32 @@ Example:
 }
 ```
 
+
+# Resource: Roles
+
+
+## [GET] all roles
+
+**URL:** /api/roles
+
+Returns an array of user roles.
+
+Example:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "student"
+  },
+  {
+    "id": 2,
+    "name": "helper"
+  },
+  {
+    "id": 3,
+    "name": "admin"
+  }
+]
+```
+
