@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const categoriesDB = require('./categories');
+const usersDB = require('./users');
 const db = require('../data/db');
 
 module.exports = {
@@ -12,6 +13,8 @@ module.exports = {
 
     for (const ticket of tickets) {
       ticket.categories = await categoriesDB.get(ticket.id, true);
+      ticket.student = await usersDB.getStudent(ticket.id);
+      ticket.helper = await usersDB.getHelper(ticket.id);
     }
 
     return tickets;

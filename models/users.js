@@ -17,6 +17,29 @@ module.exports = {
     //   'created_at',
     //   'updated_at'
     // );
+    // was causing errors
+    return query;
+  },
+  getStudent: ticketID => {
+    let query = db('users')
+      .join('tickets as t', 't.student_id', 'users.id')
+      .where('t.id', ticketID)
+      .select('username')
+      .first();
+    /*
+    SELECT username FROM users
+    JOIN tickets AS t ON t.student_id = users.id
+    WHERE t.id = 3
+    */
+
+    return query;
+  },
+  getHelper: ticketID => {
+    let query = db('users')
+      .join('tickets as t', 't.helper_id', 'users.id')
+      .where('t.id', ticketID)
+      .select('username')
+      .first();
 
     return query;
   },
