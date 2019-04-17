@@ -148,21 +148,21 @@ describe('/api/tickets', () => {
     it('responds with status code 200 on success', async () => {
       const res = await request(server)
         .put('/api/tickets/1')
-        .send({ status: 'opened', admin_id: 1 });
+        .send({ status: 'opened', helper_id: 1 });
       expect(res.status).toBe(200);
     });
 
     it('responds with status code 404 if the ticket does not exist', async () => {
       const res = await request(server)
         .put('/api/tickets/0')
-        .send({ status: 'opened', admin_id: 1 });
+        .send({ status: 'opened', helper_id: 1 });
       expect(res.status).toBe(404);
     });
 
     it('returns single ticket object', async () => {
       const ticket = await request(server)
         .put('/api/tickets/1')
-        .send({ status: 'resolved', admin_id: 1 });
+        .send({ status: 'resolved', helper_id: 1 });
       expect(ticket.body).toHaveProperty('status', 'resolved');
     });
   });

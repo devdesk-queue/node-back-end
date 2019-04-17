@@ -12,8 +12,8 @@ describe('users', () => {
       role: 'admin'
     });
     await Users.add({
-      email: 'pavos@example.com',
-      username: 'pav0s',
+      email: 'pavol@example.com',
+      username: 'pav0l',
       password: 'yeeyee'
     });
     await Users.add({

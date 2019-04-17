@@ -2,7 +2,7 @@ const Tickets = require('../../../models/tickets');
 const Users = require('../../../models/users');
 
 describe('tickets', () => {
-  beforeAll(async() => {
+  beforeAll(async () => {
     await Tickets.clear();
     await Users.clear();
 
@@ -14,8 +14,8 @@ describe('tickets', () => {
     });
 
     await Users.add({
-      email: 'pavos@example.com',
-      username: 'pav0s',
+      email: 'pavol@example.com',
+      username: 'pav0l',
       password: 'yeeyee'
     });
 
@@ -38,7 +38,7 @@ describe('tickets', () => {
       description: 'big problem',
       tried: 'cry',
       student_id: 1,
-      admin_id: 2
+      helper_id: 2
     });
     await Tickets.add({
       status: 'open',
@@ -46,7 +46,7 @@ describe('tickets', () => {
       description: 'big problem',
       tried: 'cry',
       student_id: 1,
-      admin_id: 2
+      helper_id: 2
     });
 
     const tickets = await Tickets.get();
