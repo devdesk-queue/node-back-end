@@ -9,14 +9,37 @@ module.exports = {
     if (id) query = query.where({ id });
 
     // select everything but the password
-    query = query.select(
-      'id',
-      'email',
-      'username',
-      'role',
-      'created_at',
-      'updated_at'
-    );
+    // query = query.select(
+    //   'id',
+    //   'email',
+    //   'username',
+    //   'role',
+    //   'created_at',
+    //   'updated_at'
+    // );
+    // was causing errors
+    return query;
+  },
+  getStudent: ticketID => {
+    let query = db('users')
+      .join('tickets as t', 't.student_id', 'users.id')
+      .where('t.id', ticketID)
+      .select('username')
+      .first();
+    /*
+    SELECT username FROM users
+    JOIN tickets AS t ON t.student_id = users.id
+    WHERE t.id = 3
+    */
+
+    return query;
+  },
+  getHelper: ticketID => {
+    let query = db('users')
+      .join('tickets as t', 't.helper_id', 'users.id')
+      .where('t.id', ticketID)
+      .select('username')
+      .first();
 
     return query;
   },
@@ -27,14 +50,14 @@ module.exports = {
   schema: (cat, post) => {
     const schema = post
       ? Joi.object().keys({
-          email: Joi.string().email().max(255),
-          password: Joi.string().max(255)
-        })
+        email: Joi.string().email().max(255),
+        password: Joi.string().max(255)
+      })
       : Joi.object().keys({
-          email: Joi.string().email().max(255).required(),
-          username: Joi.string().max(255).required(),
-          password: Joi.string().max(255).required()
-        });
+        email: Joi.string().email().max(255).required(),
+        username: Joi.string().max(255).required(),
+        password: Joi.string().max(255).required()
+      });
 
     return Joi.validate(cat, schema);
   }

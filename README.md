@@ -54,6 +54,7 @@ Example:
 
 ```json
 {
+  "id": 6,
   "message": "Welcome, mr. kitty!",
   "token": "<hidden>"
 }
@@ -87,12 +88,14 @@ Example:
       {
         "id": 2,
         "name": "User Interface II"
-      },
-      {
-        "id": 3,
-        "name": "User Interface III"
       }
-    ]
+    ],
+    "student": {
+      "username": "Joe"
+    },
+    "helper": {
+      "username": "mrKitty"
+    }
   }
 ]
 ```
@@ -126,7 +129,13 @@ Example:
       "id": 3,
       "name": "User Interface III"
     }
-  ]
+  ],
+  "student": {
+    "username": "Joe"
+  },
+  "helper": {
+    "username": "mrKitty"
+  }
 }
 ```
 
@@ -252,7 +261,8 @@ Example:
 
 ```json
 {
-  "message": "Category was deleted."
+  "id": 2,
+  "message": "Category with ID 2 was deleted."
 }
 ```
 
@@ -360,7 +370,8 @@ Example:
 
 ```json
 {
-  "message": "User was deleted."
+  "id": 2,
+  "message": "User with ID 2 was deleted."
 }
 ```
 
