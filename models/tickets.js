@@ -29,7 +29,7 @@ module.exports = {
   schema: (cat, post) => {
     let schema = {
       status: Joi.string().valid('inQueue', 'opened', 'resolved'),
-      admin_id: Joi.number().integer().positive()
+      helper_id: Joi.number().integer().positive()
     };
 
     if (post) schema = Object.assign(schema, {

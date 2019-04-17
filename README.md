@@ -151,12 +151,14 @@ Example:
 
 **URL:** /api/tickets/:id
 
-**Payload:** an object with the `status` and `user_id` property.
+**Payload:** an object with the `status` and `helper_id` property.
 Valid `status` values are "inQueue", "opened", "resolved" strings.
+`helper_id` is the user_id of helper user role, who is editing the ticket.
 
 ```json
 {
   "status": "inQueue",    // Required
+  "helper_id": 1          // Integer, Required.
 }
 ```
 
