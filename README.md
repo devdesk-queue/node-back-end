@@ -5,6 +5,7 @@ This repository will server as the backend server for the devdesk queue applicat
 
 # Resource: Authentication
 
+
 ## [POST] registration
 
 **URL:** /api/auth/register
@@ -36,6 +37,7 @@ Example:
 }
 ```
 
+
 ## [POST] login
 
 **URL:** /api/auth/login
@@ -61,6 +63,7 @@ Example:
 ```
 
 # Resource: Tickets
+
 
 ## [GET] all tickets
 
@@ -96,6 +99,7 @@ Example:
 ]
 ```
 
+
 ## [GET] ticket by ID
 
 **URL:** /api/tickets/:id
@@ -128,6 +132,7 @@ Example:
 }
 ```
 
+
 ## [POST] new ticket
 
 **URL:** /api/tickets
@@ -147,6 +152,7 @@ Example:
 
 **Returns:** new ticket object.
 
+
 ## [PUT] ticket
 
 **URL:** /api/tickets/:id
@@ -165,6 +171,7 @@ Valid `status` values are "inQueue", "opened", "resolved" strings.
 **Returns:** updated ticket object.
 
 # Resource: Categories
+
 
 ## [GET] all categories
 
@@ -187,6 +194,7 @@ Example:
 ]
 ```
 
+
 ## [POST] new category
 
 **URL:** /api/categories
@@ -199,4 +207,35 @@ Example:
 }
 ```
 
-**Returns:** new ticket object.
+**Returns:** new category object.
+
+
+
+## [PUT] edit category
+
+**URL:** /api/categories/:id
+
+**Payload:** an object with the following properties.
+
+```json
+{
+  "name": "React Native"
+}
+```
+
+**Returns:** updated category object.
+
+
+
+## [DELETE] category
+
+**URL:** /api/categories/:id
+
+**Returns:** success message.
+
+```json
+{ 
+  "message": "Category was deleted."
+}
+```
+

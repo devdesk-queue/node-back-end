@@ -51,5 +51,25 @@ router.put(
   }
 );
 
+/**
+ * [DELETE] /api/categories/:id
+ * @payload - none
+ * @returns - an array with new category
+*/
+router.delete(
+  '/:id',
+  restricted,
+  authorise,
+  async ({ params: { id } }, res) => {
+    const category = await Categories.remove(id);
+    if (category) {
+      res.status(200).json({ message: 'Category was deleted.' });
+    } else {
+      res.status(404).json({ message: 'The category does not exist.' });
+    }
+  }
+);
+
+
 
 module.exports = router;
