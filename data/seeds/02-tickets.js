@@ -21,16 +21,14 @@ exports.seed = function (knex) {
       title: 'problem3',
       description: 'big problem',
       tried: 'cry',
-      student_id: 3,
-      helper_id: null
+      student_id: 3
     },
     {
       status: 'inQueue',
       title: 'problem4',
       description: 'big problem',
       tried: 'cry',
-      student_id: 3,
-      helper_id: null
+      student_id: 3
     }
   ]);
 };
