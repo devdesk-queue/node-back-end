@@ -70,7 +70,7 @@ Returns an array of ticket objects.
 
 Example:
 
-```
+```json
 [
   {
     "id": 1,
@@ -104,7 +104,7 @@ Returns a ticket object.
 
 Example:
 
-```
+```json
 {
   "id": 1,
   "status": "resolved",
@@ -163,3 +163,40 @@ Valid `status` values are "inQueue", "opened", "resolved" strings.
 ```
 
 **Returns:** updated ticket object.
+
+# Resource: Categories
+
+## [GET] all categories
+
+**URL:** /api/categories
+
+Returns an array of categories objects.
+
+Example:
+
+```
+[
+  {
+    "id": 1,
+    "name": "User Interface I"
+  },
+  {
+    "id": 2,
+    "name": "User Interface II"
+  }
+]
+```
+
+## [POST] new category
+
+**URL:** /api/categories
+
+**Payload:** an object with the following properties.
+
+```json
+{
+  "name": "React Native"
+}
+```
+
+**Returns:** new ticket object.
