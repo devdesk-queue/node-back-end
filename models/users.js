@@ -5,9 +5,7 @@ module.exports = {
   add: cat => db('users').insert(cat),
   get: async (id) => {
     let query = db('users');
-
     if (id) query = query.where({ id });
-
     return query;
   },
   filter: query => db('users').where(query),
