@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Roles = require('../models/roles');
 const restricted = require('../middleware/restricted');
-const authorise = require('../middleware/authorise');
 
 /**
  * [GET] /api/roles
@@ -10,7 +9,6 @@ const authorise = require('../middleware/authorise');
 router.get(
   '/',
   restricted,
-  authorise,
   async (req, res) => {
     // eslint-disable-next-line no-unused-vars
     const roles = await Roles.get();

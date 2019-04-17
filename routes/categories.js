@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const Categories = require('../models/categories');
-const restricted = require('../middleware/restricted');
 const authorise = require('../middleware/authorise');
 const validate = require('../middleware/validate');
 
@@ -20,8 +19,7 @@ router.get('/', async (req, res) => {
 */
 router.post(
   '/',
-  restricted,
-  authorise,
+  authorise('admin'),
   validate(Categories.schema, true),
   async ({ body: newCategory }, res) => {
     const [categoryID] = await Categories.add(newCategory);
@@ -37,8 +35,7 @@ router.post(
 */
 router.put(
   '/:id',
-  restricted,
-  authorise,
+  authorise('admin'),
   validate(Categories.schema, true),
   async ({ params: { id }, body: changes }, res) => {
     const category = await Categories.update(id, changes);
@@ -58,8 +55,7 @@ router.put(
 */
 router.delete(
   '/:id',
-  restricted,
-  authorise,
+  authorise('admin'),
   async ({ params: { id } }, res) => {
     const category = await Categories.remove(id);
     if (category) {
