@@ -60,5 +60,3 @@ const validCategories = [
   'Testing IV',
   'Build Week: Back End',
 ];
-
-exports.validCategories = validCategories;

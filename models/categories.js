@@ -1,6 +1,9 @@
 const Joi = require('joi');
 const db = require('../data/db');
-const { validCategories } = require('../data/seeds/03-categories');
+
+const validCategories = () => {
+  return db('categories');
+};
 
 module.exports = {
   add: cat => db('categories').insert(cat),
@@ -30,7 +33,7 @@ module.exports = {
       :
       // otherwise, do
       Joi.object().keys({
-        name: Joi.string().max(128).required().valid(validCategories)
+        name: Joi.string().max(128).required().valid(validCategories())
       });
 
     return Joi.validate(cat, schema);
