@@ -3,9 +3,9 @@ const bcrypt = require('bcryptjs');
 exports.seed = knex =>
   knex('users').insert([
     {
-      email: 'devdeskapp@gmail.com',
-      username: 'admin',
-      password: bcrypt.hashSync('super22unicorndragon@55', 10),
+      email: process.env.ADMIN_EMAIL,
+      username: process.env.ADMIN_USERNAME,
+      password: bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10),
       role: 'admin'
     },
     {

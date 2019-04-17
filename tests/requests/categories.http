@@ -1,3 +1,0 @@
-@url = https://devdeskqueue.herokuapp.com/api/categories
-
-GET {{url}} HTTP/1.1
