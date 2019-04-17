@@ -4,7 +4,7 @@ exports.up = knex =>
     table.string('email', 255).notNullable().unique();
     table.string('username', 255).notNullable().unique();
     table.string('password', 255).notNullable();
-    table.boolean('admin').defaultTo(false);
+    table.string('role', 50).defaultTo('student');
     table.timestamp('created_at').defaultTo(knex.fn.now());
   });
 
