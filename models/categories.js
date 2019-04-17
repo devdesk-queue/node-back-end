@@ -6,7 +6,7 @@ const validCategories = () => {
 };
 
 module.exports = {
-  add: cat => db('categories').insert(cat),
+  add: cat => db('categories').insert(cat).returning('id'),
   get: async (id, ticket) => {
     let query = db('categories as c');
 

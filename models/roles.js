@@ -2,7 +2,7 @@ const Joi = require('joi');
 const db = require('../data/db');
 
 module.exports = {
-  add: role => db('roles').insert(role),
+  add: role => db('roles').insert(role).returning('id'),
   get: async (id) => {
     let query = db('roles');
     if (id) query = query.where({ id });

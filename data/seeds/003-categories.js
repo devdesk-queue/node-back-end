@@ -1,10 +1,9 @@
-exports.seed = function (knex) {
-  return knex('categories').insert(
+exports.seed = knex =>
+  knex('categories').insert(
     validCategories.map(cat => {
       return { name: cat };
     })
   );
-};
 
 const validCategories = [
   'User Interface I',
@@ -58,5 +57,5 @@ const validCategories = [
   'Testing II',
   'Testing III',
   'Testing IV',
-  'Build Week: Back End',
+  'Build Week: Back End'
 ];
