@@ -70,7 +70,7 @@ Returns an array of ticket objects.
 
 Example:
 
-```json
+```
 [
   {
     "id": 1,
@@ -94,6 +94,38 @@ Example:
     ]
   }
 ]
+```
+
+## [GET] ticket by ID
+
+**URL:** /api/tickets/:id
+
+Returns a ticket object.
+
+Example:
+
+```
+{
+  "id": 1,
+  "status": "resolved",
+  "title": "problem1",
+  "description": "big problem",
+  "tried": "cry",
+  "student_id": 2,
+  "admin_id": 1,
+  "created_at": "2019-04-17 01:57:26",
+  "updated_at": "2019-04-17 01:57:26",
+  "categories": [
+    {
+      "id": 2,
+      "name": "User Interface II"
+    },
+    {
+      "id": 3,
+      "name": "User Interface III"
+    }
+  ]
+}
 ```
 
 ## [POST] new ticket
