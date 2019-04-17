@@ -1,13 +1,12 @@
-const productionDBConnection = process.env.DATABASE_URL || {
-  host: 'localhost',
-  database: 'devdesk',
-  user: 'devdeskapp@gmail.com',
-  password: 'super22unicorndragon@55'
-};
-
 module.exports = {
   knex: {
-    client: 'pg',
-    connection: productionDBConnection
+    client: 'sqlite3',
+    useNullAsDefault: true,
+    connection: { filename: './data/devdesk.sqlite3' },
+    pool: {
+      afterCreate: (conn, done) => {
+        conn.run('PRAGMA foreign_keys = ON', done);
+      }
+    }
   }
 };
