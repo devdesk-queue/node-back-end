@@ -2,7 +2,7 @@ const Joi = require('joi');
 const db = require('../data/db');
 
 module.exports = {
-  add: cat => db('users').insert(cat),
+  add: user => db('users').insert(user).returning('id'),
   get: async id => {
     let query = db('users');
 
@@ -24,7 +24,7 @@ module.exports = {
   update: (id, changes) => db('users').where({ id }).update(changes),
   remove: id => db('users').where({ id }).del(),
   clear: () => db('users').truncate(),
-  schema: (cat, post) => {
+  schema: (user, post) => {
     const schema = post
       ? Joi.object().keys({
           email: Joi.string().email().max(255),
@@ -36,6 +36,6 @@ module.exports = {
           password: Joi.string().max(255).required()
         });
 
-    return Joi.validate(cat, schema);
+    return Joi.validate(user, schema);
   }
 };

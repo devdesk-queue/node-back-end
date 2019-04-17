@@ -3,7 +3,7 @@ const categoriesDB = require('./categories');
 const db = require('../data/db');
 
 module.exports = {
-  add: cat => db('tickets').insert(cat),
+  add: ticket => db('tickets').insert(ticket).returning('id'),
   get: async id => {
     let query = db('tickets');
     if (id) query = query.where({ id });
@@ -26,7 +26,7 @@ module.exports = {
       .where({ id })
       .del(),
   clear: () => db('tickets').truncate(),
-  schema: (cat, post) => {
+  schema: (ticket, post) => {
     let schema = {
       status: Joi.string().valid('inQueue', 'opened', 'resolved'),
       helper_id: Joi.number().integer().positive()
@@ -40,6 +40,6 @@ module.exports = {
       category: Joi.string().required()
     });
 
-    return Joi.validate(cat, schema);
+    return Joi.validate(ticket, schema);
   }
 };
