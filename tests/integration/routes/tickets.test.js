@@ -1,26 +1,50 @@
-const server = require('../../../api/server');
+const bcrypt = require('bcryptjs');
 const request = require('supertest');
+const server = require('../../../api/server');
+const Users = require('../../../models/users');
 const Tickets = require('../../../models/tickets');
 const Categories = require('../../../models/categories');
 
-describe('Tickets route', () => {
+describe('/api/tickets', () => {
   beforeAll(async () => {
-    await Tickets.add({
-      'title': 'First ticket',
-      'description': 'I need help',
-      'tried': 'I tried this....',
-      'student_id': 2,
+    await Tickets.clear();
+    await Categories.clear();
+
+    await Users.add({
+      email: 'devdeskapp@gmail.com',
+      username: 'admin',
+      password: bcrypt.hashSync('super22unicorndragon@55', 10),
+      role: 'admin'
+    });
+
+    await Users.add({
+      email: 'pavos@example.com',
+      username: 'pav0s',
+      password: bcrypt.hashSync('yeeyee', 10)
+    });
+
+    await Users.add({
+      email: 'macbethjonathan@gmail.com',
+      username: 'macjabeth',
+      password: bcrypt.hashSync('supersecurepasswd', 10)
     });
 
     await Tickets.add({
-      'title': 'Second ticket',
-      'description': 'I need help',
-      'tried': 'I tried this....',
-      'student_id': 2,
+      title: 'First ticket',
+      description: 'I need help',
+      tried: 'I tried this....',
+      student_id: 2
+    });
+
+    await Tickets.add({
+      title: 'Second ticket',
+      description: 'I need help',
+      tried: 'I tried this....',
+      student_id: 2
     });
 
     await Categories.add({
-      'name': 'JavaScript IV',
+      name: 'JavaScript IV'
     });
   });
 
@@ -33,20 +57,19 @@ describe('Tickets route', () => {
     expect(process.env.NODE_ENV).toBe('testing');
   });
 
-  describe('GET all tickets. /api/tickets', () => {
-    it('responds with Status Code 200 on success', () => {
-      return request(server).get('/api/tickets').expect(200);
+  describe('GET /', () => {
+    it('responds with status code 200 on success', async () => {
+      const res = await request(server).get('/api/tickets');
+      expect(res.status).toBe(200);
     });
 
-    it('returns Tickets', async () => {
+    it('returns tickets', async () => {
       const tickets = await request(server).get('/api/tickets');
       expect(tickets.body).toHaveLength(2);
     });
 
-    it('has a JSON content type header', () => {
-      return request(server)
-        .get('/api/tickets')
-        .expect('Content-Type', /json/i);
+    it('has a json content type header', async () => {
+      await request(server).get('/api/tickets').expect('Content-Type', /json/);
     });
 
     it('returns an array', async () => {
@@ -55,13 +78,15 @@ describe('Tickets route', () => {
     });
   });
 
-  describe('GET ticket by id. /api/tickets/:id', () => {
-    it('responds with Status Code 200 on success', () => {
-      return request(server).get('/api/tickets/1').expect(200);
+  describe('GET /:id', () => {
+    it('responds with status code 200 on success', async () => {
+      const res = await request(server).get('/api/tickets/1');
+      expect(res.status).toBe(200);
     });
 
-    it('responds with Status Code 404 if the ticket does not exist', () => {
-      return request(server).get('/api/tickets/0').expect(404);
+    it('responds with status code 404 if the ticket does not exist', async () => {
+      const res = await request(server).get('/api/tickets/0');
+      expect(res.status).toBe(404);
     });
 
     it('returns single ticket object', async () => {
@@ -70,36 +95,36 @@ describe('Tickets route', () => {
     });
   });
 
-  describe('POST new ticket. /api/tickets', () => {
-    it('responds with Status Code 422 on failed payload validation', () => {
-      return request(server)
+  describe('POST /', () => {
+    it('responds with status code 422 on failed payload validation', async () => {
+      const res = await request(server)
         .post('/api/tickets')
-        .send({ title: 'Unfinished ticket' })
-        .expect(422);
+        .send({ title: 'Unfinished ticket' });
+      expect(res.status).toBe(422);
     });
 
-    it('responds with Status Code 201 on success', () => {
-      return request(server)
+    it('responds with status code 201 on success', async () => {
+      const res = await request(server)
         .post('/api/tickets')
         .send({
-          'title': 'Third ticket',
-          'description': 'I need help',
-          'tried': 'I tried this....',
-          'student_id': 3,
-          'category': 'JavaScript IV',
-        })
-        .expect(201);
+          title: 'Third ticket',
+          description: 'I need help',
+          tried: 'I tried this....',
+          student_id: 3,
+          category: 'JavaScript IV'
+        });
+      expect(res.status).toBe(201);
     });
 
     it('adds new ticket', async () => {
       await request(server)
         .post('/api/tickets')
         .send({
-          'title': 'Fourth ticket',
-          'description': 'I need help',
-          'tried': 'I tried this....',
-          'student_id': 3,
-          'category': 'JavaScript IV',
+          title: 'Fourth ticket',
+          description: 'I need help',
+          tried: 'I tried this....',
+          student_id: 3,
+          category: 'JavaScript IV'
         });
       const tickets = await Tickets.get();
       expect(tickets).toHaveLength(4);
@@ -109,36 +134,36 @@ describe('Tickets route', () => {
       const ticket = await request(server)
         .post('/api/tickets')
         .send({
-          'title': 'Fifth ticket',
-          'description': 'I need help',
-          'tried': 'I tried this....',
-          'student_id': 3,
-          'category': 'JavaScript IV',
+          title: 'Fifth ticket',
+          description: 'I need help',
+          tried: 'I tried this....',
+          student_id: 3,
+          category: 'JavaScript IV'
         });
-      expect(ticket.body.title).toBe('Fifth ticket');
+      expect(ticket.body).toHaveProperty('title', 'Fifth ticket');
     });
   });
 
-  describe('PUT ticket by id. /api/tickets/:id', () => {
-    it('responds with Status Code 200 on success', () => {
-      return request(server)
+  describe('PUT /:id', () => {
+    it('responds with status code 200 on success', async () => {
+      const res = await request(server)
         .put('/api/tickets/1')
-        .send({ 'status': 'opened', 'admin_id': 1 })
-        .expect(200);
+        .send({ status: 'opened', admin_id: 1 });
+      expect(res.status).toBe(200);
     });
 
-    it('responds with Status Code 404 if the ticket does not exist', () => {
-      return request(server)
+    it('responds with status code 404 if the ticket does not exist', async () => {
+      const res = await request(server)
         .put('/api/tickets/0')
-        .send({ 'status': 'opened', 'admin_id': 1 })
-        .expect(404);
+        .send({ status: 'opened', admin_id: 1 });
+      expect(res.status).toBe(404);
     });
 
     it('returns single ticket object', async () => {
       const ticket = await request(server)
         .put('/api/tickets/1')
-        .send({ 'status': 'resolved', 'admin_id': 1 });
-      expect(ticket.body).toHaveProperty('id', 1);
+        .send({ status: 'resolved', admin_id: 1 });
+      expect(ticket.body).toHaveProperty('status', 'resolved');
     });
   });
 });
