@@ -30,6 +30,12 @@ exports.logger = expressWinston.logger({
 
 exports.errorLogger = expressWinston.errorLogger({
   transports: [
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.simple()
+      )
+    }),
     new winston.transports.File({
       filename: './logs/error.log',
       format: winston.format.combine(

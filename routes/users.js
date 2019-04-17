@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const Users = require('../models/users');
-const restricted = require('../middleware/restricted');
 const authorise = require('../middleware/authorise');
 const validate = require('../middleware/validate');
 
@@ -11,8 +10,7 @@ const validate = require('../middleware/validate');
 */
 router.get(
   '/',
-  restricted,
-  authorise,
+  authorise('admin'),
   async (req, res) => {
     // eslint-disable-next-line no-unused-vars
     const users = await Users.get();
@@ -26,8 +24,7 @@ router.get(
 */
 router.get(
   '/:id',
-  restricted,
-  authorise,
+  authorise(['admin'], ':id'),
   async ({ params: { id } }, res) => {
     // eslint-disable-next-line no-unused-vars
     const [{ password, ...user }] = await Users.get(id);
@@ -43,8 +40,7 @@ router.get(
 */
 router.put(
   '/:id',
-  restricted,
-  authorise,
+  authorise('admin', ':id'),
   validate(Users.schema, true),
   async ({ params: { id }, body: changes }, res) => {
     if (changes.password) {
@@ -68,8 +64,7 @@ router.put(
 */
 router.delete(
   '/:id',
-  restricted,
-  authorise,
+  authorise('admin'),
   async ({ params: { id } }, res) => {
     const user = await Users.remove(id);
     if (user) {

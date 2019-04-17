@@ -1,6 +1,6 @@
 const validate = require('../middleware/validate');
-const authorise = require('../middleware/authorise');
 const restricted = require('../middleware/restricted');
+const authorise = require('../middleware/authorise');
 const Tickets = require('../models/tickets');
 const Categories = require('../models/categories');
 const CategorizedTickets = require('../models/categorizedTickets');
@@ -64,8 +64,7 @@ router.get('/:id', async ({ params: { id } }, res) => {
  */
 router.put(
   '/:id',
-  restricted,
-  authorise,
+  authorise(['helper', 'admin'], 'creator'),
   validate(Tickets.schema),
   async ({ params: { id }, body: changes }, res) => {
     const count = await Tickets.update(id, changes);

@@ -5,7 +5,7 @@ exports.up = knex =>
     table.string('username', 255).notNullable().unique();
     table.string('password', 255).notNullable();
     table.string('role', 50).defaultTo('student');
-    table.timestamp('created_at').defaultTo(knex.fn.now());
+    table.timestamps(true, true);
   });
 
 exports.down = knex => knex.schema.dropTableIfExists('users');
