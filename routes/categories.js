@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 /**
  * [POST] /api/categories
  * @payload - an object with name of the category
- * @returns - an array with new category
+ * @returns - an object with new category
 */
 router.post(
   '/',
@@ -25,9 +25,31 @@ router.post(
   validate(Categories.schema, true),
   async ({ body: newCategory }, res) => {
     const [categoryID] = await Categories.add(newCategory);
-    const category = await Categories.get(categoryID);
+    const [category] = await Categories.get(categoryID);
     res.status(201).json(category);
   }
 );
+
+/**
+ * [PUT] /api/categories/:id
+ * @payload - an object with name of the category
+ * @returns - an array with new category
+*/
+router.put(
+  '/:id',
+  restricted,
+  authorise,
+  validate(Categories.schema, true),
+  async ({ params: { id }, body: changes }, res) => {
+    const category = await Categories.update(id, changes);
+    if (category) {
+      const [changedCategory] = await Categories.get(id);
+      res.status(200).json(changedCategory);
+    } else {
+      res.status(404).json({ message: 'The category does not exist.' });
+    }
+  }
+);
+
 
 module.exports = router;
