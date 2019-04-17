@@ -70,7 +70,7 @@ Returns an array of ticket objects.
 
 Example:
 
-```json
+```
 [
   {
     "id": 1,
@@ -79,7 +79,7 @@ Example:
     "description": "big problem",
     "tried": "cry",
     "student_id": 2,
-    "admin_id": 1,
+    "helper_id": 1,
     "created_at": "2019-04-17 01:57:26",
     "updated_at": "2019-04-17 01:57:26",
     "categories": [
@@ -94,6 +94,38 @@ Example:
     ]
   }
 ]
+```
+
+## [GET] ticket by ID
+
+**URL:** /api/tickets/:id
+
+Returns a ticket object.
+
+Example:
+
+```
+{
+  "id": 1,
+  "status": "resolved",
+  "title": "problem1",
+  "description": "big problem",
+  "tried": "cry",
+  "student_id": 2,
+  "helper_id": 1,
+  "created_at": "2019-04-17 01:57:26",
+  "updated_at": "2019-04-17 01:57:26",
+  "categories": [
+    {
+      "id": 2,
+      "name": "User Interface II"
+    },
+    {
+      "id": 3,
+      "name": "User Interface III"
+    }
+  ]
+}
 ```
 
 ## [POST] new ticket
@@ -119,12 +151,14 @@ Example:
 
 **URL:** /api/tickets/:id
 
-**Payload:** an object with the `status` and `user_id` property.
+**Payload:** an object with the `status` and `helper_id` property.
 Valid `status` values are "inQueue", "opened", "resolved" strings.
+`helper_id` is the user_id of helper user role, who is editing the ticket.
 
 ```json
 {
   "status": "inQueue",    // Required
+  "helper_id": 1          // Integer, Required.
 }
 ```
 

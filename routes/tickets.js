@@ -6,10 +6,6 @@ const Categories = require('../models/categories');
 const CategorizedTickets = require('../models/categorizedTickets');
 const router = require('express').Router();
 
-/**
- * @todo - protected routes
- * @todo - fix [PUT] payload validation
- */
 
 /**
  * [POST] /api/tickets
@@ -63,7 +59,7 @@ router.get('/:id', async ({ params: { id } }, res) => {
 
 /**
  * [PUT] ticket
- * @payload - an object with `status` property
+ * @payload - an object with `status` and `helper_id` property
  * @returns - updated ticket object
  */
 router.put(
