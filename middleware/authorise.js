@@ -11,8 +11,11 @@ module.exports = (roles = [], flag) => {
     restricted,
     (req, res, next) => {
       if (
+        // check if user has valid role if provided
         (roles.length && roles.includes(req.user.role)) ||
-        (flag === 'creator' && req.user.subject === req.body.helper_id) ||
+        // used for tickets: checks that user is the ticket creator
+        (flag === 'creator' && req.user.subject === req.body.student_id) ||
+        // checks if user id is equal to the resource being accessed (used for users)
         (flag === ':id' && req.user.subject === req.params.id)
       ) {
         // authentication and authorization successful
