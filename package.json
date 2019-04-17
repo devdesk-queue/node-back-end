@@ -8,7 +8,7 @@
     "test": "cross-env NODE_ENV=testing jest --watch --verbose",
     "server": "nodemon",
     "migrate": "knex migrate:latest",
-    "migrate_test": "cross-env NODE_ENV=testing knex migrate:latest",
+    "migrate:test": "cross-env NODE_ENV=testing knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run"
   },
