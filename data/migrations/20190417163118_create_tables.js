@@ -16,12 +16,12 @@ exports.up = knex => knex.schema
     // what the student tried to fix this issue
     table.text('tried');
     // student who created the ticket
-    table.integer('student_id').unsigned().notNullable().references('users.id');
-    // table.foreign('student_id').references('users.id');
+    table.integer('student_id').unsigned().notNullable();
+    table.foreign('student_id').references('users.id');
     // do we want user or admin deletion to delete the created ticket?
     // if not assigned = the ticket is still in the queue
-    table.integer('helper_id').unsigned().references('users.id');
-    // table.foreign('helper_id').references('users.id');
+    table.integer('helper_id').unsigned();
+    table.foreign('helper_id').references('users.id');
     table.timestamps(true, true);
   })
   .createTable('categories', table => {
@@ -30,14 +30,12 @@ exports.up = knex => knex.schema
   })
   .createTable('categorized_tickets', table => {
     table.increments();
-    table.integer('ticket_id').unsigned().notNullable().references('tickets.id')
+    table.integer('ticket_id').unsigned().notNullable();
+    table.foreign('ticket_id').references('tickets.id')
       .onDelete('CASCADE').onUpdate('CASCADE');
-    // table.foreign('ticket_id').references('tickets.id')
-    //   .onDelete('CASCADE').onUpdate('CASCADE');
-    table.integer('category_id').unsigned().notNullable().references('categories.id')
+    table.integer('category_id').unsigned().notNullable();
+    table.foreign('category_id').references('categories.id')
       .onDelete('CASCADE').onUpdate('CASCADE');
-    // table.foreign('category_id').references('categories.id')
-    //   .onDelete('CASCADE').onUpdate('CASCADE');
   })
   .createTable('roles', table => {
     table.increments();
