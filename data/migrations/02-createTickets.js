@@ -19,8 +19,8 @@ exports.up = knex =>
     // do we want user or admin deletion to delete the created ticket?
 
     // if not assigned = the ticket is still in the queue
-    table.integer('admin_id').unsigned();
-    table.foreign('admin_id').references('users.id');
+    table.integer('helper_id').unsigned();
+    table.foreign('helper_id').references('users.id');
 
     table.timestamps(true, true);
   });

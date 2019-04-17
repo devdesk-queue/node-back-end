@@ -79,7 +79,7 @@ Example:
     "description": "big problem",
     "tried": "cry",
     "student_id": 2,
-    "admin_id": 1,
+    "helper_id": 1,
     "created_at": "2019-04-17 01:57:26",
     "updated_at": "2019-04-17 01:57:26",
     "categories": [
@@ -112,7 +112,7 @@ Example:
   "description": "big problem",
   "tried": "cry",
   "student_id": 2,
-  "admin_id": 1,
+  "helper_id": 1,
   "created_at": "2019-04-17 01:57:26",
   "updated_at": "2019-04-17 01:57:26",
   "categories": [

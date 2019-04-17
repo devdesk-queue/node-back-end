@@ -6,7 +6,7 @@ exports.seed = function (knex) {
       description: 'big problem',
       tried: 'cry',
       student_id: 2,
-      admin_id: 1
+      helper_id: 1
     },
     {
       status: 'open',
@@ -14,7 +14,7 @@ exports.seed = function (knex) {
       description: 'big problem',
       tried: 'cry',
       student_id: 4,
-      admin_id: 1
+      helper_id: 1
     },
     {
       status: 'inQueue',
@@ -22,7 +22,7 @@ exports.seed = function (knex) {
       description: 'big problem',
       tried: 'cry',
       student_id: 3,
-      admin_id: null
+      helper_id: null
     },
     {
       status: 'inQueue',
@@ -30,7 +30,7 @@ exports.seed = function (knex) {
       description: 'big problem',
       tried: 'cry',
       student_id: 3,
-      admin_id: null
+      helper_id: null
     }
   ]);
 };
