@@ -59,7 +59,7 @@ router.delete(
   async ({ params: { id } }, res) => {
     const category = await Categories.remove(id);
     if (category) {
-      res.status(200).json({ message: 'Category was deleted.' });
+      res.status(200).json({ id, message: `Category with ID ${id} was deleted.` });
     } else {
       res.status(404).json({ message: 'The category does not exist.' });
     }
