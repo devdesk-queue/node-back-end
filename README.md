@@ -135,6 +135,8 @@ Example:
 
 **URL:** /api/tickets
 
+**Restricted:** User must be logged in.
+
 **Payload:** an object with the following properties.
 
 *Category* can be a string from pre-selected list!
@@ -154,6 +156,10 @@ Example:
 ## [PUT] ticket
 
 **URL:** /api/tickets/:id
+
+**Restricted:** User must be logged in.
+
+**Authorisation:** User must be a helper, admin, or the student who created the ticket.
 
 **Payload:** an object with the `status` and `helper_id` property.
 Valid `status` values are "inQueue", "opened", "resolved" strings.
@@ -198,6 +204,10 @@ Example:
 
 **URL:** /api/categories
 
+**Restricted:** User must be logged in.
+
+**Authorisation:** User must be an admin.
+
 **Payload:** an object with the following properties.
 
 ```json
@@ -213,6 +223,10 @@ Example:
 ## [PUT] edit category
 
 **URL:** /api/categories/:id
+
+**Restricted:** User must be logged in.
+
+**Authorisation:** User must be an admin.
 
 **Payload:** an object with the following properties.
 
@@ -230,10 +244,14 @@ Example:
 
 **URL:** /api/categories/:id
 
+**Restricted:** User must be logged in.
+
+**Authorisation:** User must be an admin.
+
 **Returns:** success message.
 
 ```json
-{ 
+{
   "message": "Category was deleted."
 }
 ```
@@ -246,12 +264,16 @@ Example:
 
 **URL:** /api/users
 
+**Restricted:** User must be logged in.
+
+**Authorisation:** User must be an admin.
+
 Returns an array of user objects.
 
 Example:
 
 ```json
-[ 
+[
   {
     "id": 4,
     "email": "omar@kittycuddlers.net",
@@ -276,6 +298,10 @@ Example:
 
 **URL:** /api/users/:id
 
+**Restricted:** User must be logged in.
+
+**Authorisation:** User must be an admin or the user being fetched.
+
 Returns a user object.
 
 Example:
@@ -294,6 +320,10 @@ Example:
 ## [PUT] edit user
 
 **URL:** /api/users/:id
+
+**Restricted:** User must be logged in.
+
+**Authorisation:** User must be an admin or the user being edited.
 
 **Payload:** an object with one or both following properties.
 
@@ -322,10 +352,14 @@ Example:
 
 **URL:** /api/users/:id
 
+**Restricted:** User must be logged in.
+
+**Authorisation:** User must be an admin.
+
 **Returns:** success message.
 
 ```json
-{ 
+{
   "message": "User was deleted."
 }
 ```
@@ -358,4 +392,3 @@ Example:
   }
 ]
 ```
-
