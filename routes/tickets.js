@@ -125,7 +125,7 @@ router.post(
 
     // extract the slash command text, and trigger ID from payload
     const { text, trigger_id } = req.body;
-
+    res.status(200).json({ message: 'Hello' });
     // Verify the signing secret
     if (signature.isVerified(req)) {
       // create the dialog payload - includes the dialog structure, Slack API token,
@@ -160,7 +160,7 @@ router.post(
           ],
         }),
       };
-      res.status(200).json({ dialog });
+
       // open the dialog by calling dialogs.open method and sending the payload
       // axios.post(`${apiUrl}/dialog.open`, qs.stringify(dialog))
       //   .then((result) => {
