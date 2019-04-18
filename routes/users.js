@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const Users = require('../models/users');
+const Roles = require('../models/roles');
 const authorise = require('../middleware/authorise');
 const validate = require('../middleware/validate');
 
@@ -43,24 +44,51 @@ router.put(
   authorise('admin', ':id'),
   validate(Users.schema, true),
   async ({ params: { id }, body: changes }, res) => {
-    if (changes.password) {
-      changes.password = bcrypt.hashSync(changes.password, 10);
+    // check if user exists
+    let [user] = await Users.get(id);
+    if (!user) return res.status(404).json({
+      message: 'The user does not exist.'
+    });
+
+    // check if current passwords match
+    if (!bcrypt.compareSync(changes.currentPassword, user.password)) {
+      return res.status(400).json({
+        message: 'The current password did not match.'
+      });
     }
-    const user = await Users.update(id, changes);
-    if (user) {
-      // eslint-disable-next-line no-unused-vars
-      const [{ password, ...changedUser }] = await Users.get(id);
-      res.status(200).json(changedUser);
-    } else {
-      res.status(404).json({ message: 'The user does not exist.' });
+
+    // update email if provided
+    if (changes.email) user.email = changes.email;
+
+    // update username if provided
+    if (changes.username) user.username = changes.username;
+
+    // update password if provided
+    if (changes.newPassword) {
+      user.password = bcrypt.hashSync(changes.newPassword, 10);
     }
+
+    // update role if provided & user is admin
+    if (changes.role && user.role === 'admin') {
+      // check if role is valid
+      const roles = await Roles.get();
+      if (roles.find(role => role.name === changes.role)) {
+        user.role = changes.role;
+      }
+    }
+
+    user = await Users.update(id, user);
+
+    // eslint-disable-next-line no-unused-vars
+    const [{ password, ...changedUser }] = await Users.get(id);
+    res.status(200).json(changedUser);
   }
 );
 
 /**
  * [DELETE] /api/users/:id
  * @payload - none
- * @returns - an array with new user
+ * @returns - an object with the message status
 */
 router.delete(
   '/:id',

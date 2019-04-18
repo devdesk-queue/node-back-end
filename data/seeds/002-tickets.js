@@ -8,7 +8,7 @@ exports.seed = knex =>
       student_id: 2
     },
     {
-      status: 'open',
+      status: 'opened',
       title: 'problem2',
       description: 'big problem',
       tried: 'cry',

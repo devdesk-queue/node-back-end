@@ -24,17 +24,14 @@ module.exports = {
   update: (id, changes) => db('users').where({ id }).update(changes),
   remove: id => db('users').where({ id }).del(),
   clear: () => db('users').truncate(),
-  schema: (user, post) => {
-    const schema = post
-      ? Joi.object().keys({
-          email: Joi.string().email().max(255),
-          password: Joi.string().max(255)
-        })
-      : Joi.object().keys({
-          email: Joi.string().email().max(255).required(),
-          username: Joi.string().max(255).required(),
-          password: Joi.string().max(255).required()
-        });
+  schema: user => {
+    const schema = Joi.object().keys({
+      currentPassword: Joi.string().max(255).required(),
+      newPassword: Joi.string().max(255),
+      email: Joi.string().email().max(255),
+      username: Joi.string().max(255),
+      role: Joi.string().max(50)
+    });
 
     return Joi.validate(user, schema);
   }

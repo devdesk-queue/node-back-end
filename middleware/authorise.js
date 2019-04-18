@@ -1,4 +1,5 @@
 const restricted = require('./restricted');
+const Tickets = require('../models/tickets');
 
 module.exports = (roles = [], flag) => {
   // roles param can be a single role string (e.g. 'admin')
@@ -9,12 +10,17 @@ module.exports = (roles = [], flag) => {
 
   return [
     restricted,
-    (req, res, next) => {
+    async (req, res, next) => {
+      let ticket;
+      if (flag === 'creator') {
+        [ticket] = await Tickets.get(req.params.id);
+      }
+
       if (
         // check if user has valid role if provided
         (roles.length && roles.includes(req.user.role)) ||
         // used for tickets: checks that user is the ticket creator
-        (flag === 'creator' && req.user.subject === req.body.student_id) ||
+        (flag === 'creator' && req.user.subject === (ticket && ticket.student_id)) ||
         // checks if user id is equal to the resource being accessed (used for users)
         (flag === ':id' && req.user.subject === req.params.id)
       ) {

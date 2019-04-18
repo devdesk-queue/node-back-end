@@ -6,7 +6,7 @@ describe('/api/auth', () => {
   beforeAll(async () => { await Users.clear(); });
   afterAll(async () => { await Users.clear(); });
 
-  describe('POST /', () => {
+  describe('POST /register', () => {
     it('should add the user if it is successfully validated', async () => {
       const superChillUser = {
         email: 'test@example.com',
