@@ -119,6 +119,8 @@ const debug = require('debug')('slash-command-template:index');
 const ticket = require('../slack_bot/ticket');
 const qs = require('querystring');
 
+const apiUrl = 'https://slack.com/api';
+
 router.post(
   '/command',
   async (req, res) => {
@@ -162,7 +164,7 @@ router.post(
       };
 
       // open the dialog by calling dialogs.open method and sending the payload
-      axios.post('https://devdeskqueue-slack-bot.herokuapp.com/dialog.open', qs.stringify(dialog))
+      axios.post(`${apiUrl}/dialog.open`, qs.stringify(dialog))
         .then((result) => {
           debug('dialog.open: %o', result.data);
           res.send('');
