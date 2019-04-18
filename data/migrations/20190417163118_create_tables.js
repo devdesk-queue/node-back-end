@@ -10,7 +10,7 @@ exports.up = knex => knex.schema
   .createTable('tickets', table => {
     table.increments();
     // predefined set of options: inQueue/opened/resolved
-    table.string('status', 128).defaultTo('inQueue');
+    table.string('status', 128).notNullable();
     table.string('title', 256).notNullable();
     table.text('description').notNullable();
     // what the student tried to fix this issue
