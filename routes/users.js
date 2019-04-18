@@ -43,18 +43,21 @@ router.put(
   '/:id',
   authorise('admin', ':id'),
   validate(Users.schema, true),
-  async ({ params: { id }, body: changes }, res) => {
+  async ({ params: { id }, body: changes, user: client }, res) => {
     // check if user exists
     let [user] = await Users.get(id);
     if (!user) return res.status(404).json({
       message: 'The user does not exist.'
     });
 
-    // check if current passwords match
-    if (!bcrypt.compareSync(changes.currentPassword, user.password)) {
-      return res.status(400).json({
-        message: 'The current password did not match.'
-      });
+    // if they're updating their own user data
+    if (client.id === Number(id)) {
+      // confirm by checking if current passwords match
+      if (!bcrypt.compareSync(changes.currentPassword, user.password)) {
+        return res.status(400).json({
+          message: 'The current password did not match.'
+        });
+      }
     }
 
     // update email if provided
