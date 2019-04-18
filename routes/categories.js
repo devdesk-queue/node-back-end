@@ -22,8 +22,14 @@ router.post(
   authorise('admin'),
   validate(Categories.schema, true),
   async ({ body: newCategory }, res) => {
+    let [category] = await Categories.filter({ name: newCategory.name });
+    if (category) return res.status(405).json({
+      message: 'That category has already been defined.'
+    });
+
     const [categoryID] = await Categories.add(newCategory);
-    const [category] = await Categories.get(categoryID);
+          [category] = await Categories.get(categoryID);
+
     res.status(201).json(category);
   }
 );
@@ -36,15 +42,21 @@ router.post(
 router.put(
   '/:id',
   authorise('admin'),
-  validate(Categories.schema, true),
+  validate(Categories.schema),
   async ({ params: { id }, body: changes }, res) => {
-    const category = await Categories.update(id, changes);
-    if (category) {
-      const [changedCategory] = await Categories.get(id);
-      res.status(200).json(changedCategory);
-    } else {
-      res.status(404).json({ message: 'The category does not exist.' });
-    }
+    let [category] = await Categories.filter({ name: changes.name });
+    if (category) return res.status(405).json({
+      message: 'That category has already been defined.'
+    });
+
+    const updated = await Categories.update(id, changes);
+    if (!updated) return res.status(404).json({
+      message: 'The category does not exist.'
+    });
+
+    [category] = await Categories.get(id);
+
+    res.status(200).json(category);
   }
 );
 
