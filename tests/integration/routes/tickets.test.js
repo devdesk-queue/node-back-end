@@ -6,7 +6,10 @@ const Tickets = require('../../../models/tickets');
 const Categories = require('../../../models/categories');
 
 describe('/api/tickets', () => {
+  let token;
+
   beforeAll(async () => {
+    await Users.clear();
     await Tickets.clear();
     await Categories.clear();
 
@@ -16,6 +19,12 @@ describe('/api/tickets', () => {
       password: bcrypt.hashSync('super22unicorndragon@55', 10),
       role: 'admin'
     });
+
+    const res = await request(server)
+      .post('/api/auth/login')
+      .send({ username: 'admin', password: 'super22unicorndragon@55' });
+
+    token = res.body.token;
 
     await Users.add({
       email: 'pavos@example.com',
@@ -30,6 +39,7 @@ describe('/api/tickets', () => {
     });
 
     await Tickets.add({
+      status: 'inQueue',
       title: 'First ticket',
       description: 'I need help',
       tried: 'I tried this....',
@@ -37,6 +47,7 @@ describe('/api/tickets', () => {
     });
 
     await Tickets.add({
+      status: 'inQueue',
       title: 'Second ticket',
       description: 'I need help',
       tried: 'I tried this....',
@@ -49,6 +60,7 @@ describe('/api/tickets', () => {
   });
 
   afterAll(async () => {
+    await Users.clear();
     await Tickets.clear();
     await Categories.clear();
   });
@@ -96,9 +108,17 @@ describe('/api/tickets', () => {
   });
 
   describe('POST /', () => {
+    it('responds with status code 401 on unauthenticated user payload', async () => {
+      const res = await request(server)
+        .post('/api/tickets')
+        .send({ title: 'Unauthenticated ticket' });
+      expect(res.status).toBe(401);
+    });
+
     it('responds with status code 422 on failed payload validation', async () => {
       const res = await request(server)
         .post('/api/tickets')
+        .set('authorization', token)
         .send({ title: 'Unfinished ticket' });
       expect(res.status).toBe(422);
     });
@@ -106,11 +126,12 @@ describe('/api/tickets', () => {
     it('responds with status code 201 on success', async () => {
       const res = await request(server)
         .post('/api/tickets')
+        .set('authorization', token)
         .send({
+          status: 'opened',
           title: 'Third ticket',
           description: 'I need help',
           tried: 'I tried this....',
-          student_id: 3,
           category: 'JavaScript IV'
         });
       expect(res.status).toBe(201);
@@ -119,11 +140,12 @@ describe('/api/tickets', () => {
     it('adds new ticket', async () => {
       await request(server)
         .post('/api/tickets')
+        .set('authorization', token)
         .send({
+          status: 'opened',
           title: 'Fourth ticket',
           description: 'I need help',
           tried: 'I tried this....',
-          student_id: 3,
           category: 'JavaScript IV'
         });
       const tickets = await Tickets.get();
@@ -133,11 +155,12 @@ describe('/api/tickets', () => {
     it('returns new ticket', async () => {
       const ticket = await request(server)
         .post('/api/tickets')
+        .set('authorization', token)
         .send({
+          status: 'opened',
           title: 'Fifth ticket',
           description: 'I need help',
           tried: 'I tried this....',
-          student_id: 3,
           category: 'JavaScript IV'
         });
       expect(ticket.body).toHaveProperty('title', 'Fifth ticket');
@@ -145,16 +168,25 @@ describe('/api/tickets', () => {
   });
 
   describe('PUT /:id', () => {
+    it('responds with status code 401 on authenticated payload', async () => {
+      const res = await request(server)
+        .put('/api/tickets/1')
+        .send({ status: 'resolved', helper_id: 1 });
+      expect(res.status).toBe(401);
+    });
+
     it('responds with status code 200 on success', async () => {
       const res = await request(server)
         .put('/api/tickets/1')
-        .send({ status: 'opened', helper_id: 1 });
+        .set('authorization', token)
+        .send({ status: 'resolved', helper_id: 1 });
       expect(res.status).toBe(200);
     });
 
     it('responds with status code 404 if the ticket does not exist', async () => {
       const res = await request(server)
         .put('/api/tickets/0')
+        .set('authorization', token)
         .send({ status: 'opened', helper_id: 1 });
       expect(res.status).toBe(404);
     });
@@ -162,6 +194,7 @@ describe('/api/tickets', () => {
     it('returns single ticket object', async () => {
       const ticket = await request(server)
         .put('/api/tickets/1')
+        .set('authorization', token)
         .send({ status: 'resolved', helper_id: 1 });
       expect(ticket.body).toHaveProperty('status', 'resolved');
     });
