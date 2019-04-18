@@ -22,7 +22,7 @@ module.exports = (roles = [], flag) => {
         // used for tickets: checks that user is the ticket creator
         (flag === 'creator' && req.user.subject === (ticket && ticket.student_id)) ||
         // checks if user id is equal to the resource being accessed (used for users)
-        (flag === ':id' && req.user.subject === req.params.id)
+        (flag === ':id' && req.user.subject === Number(req.params.id))
       ) {
         // authentication and authorization successful
         next();
