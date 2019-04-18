@@ -107,4 +107,18 @@ router.delete(
   }
 );
 
+/**
+ * [POST] /api/tickets/command
+ * @payload - an object with title, description and student_id required props
+ * @returns - an array with new ticket ID
+ */
+router.post(
+  '/command',
+  async (req, res) => {
+    res.end('Slack bot request');
+  }
+);
+
+
+
 module.exports = router;
