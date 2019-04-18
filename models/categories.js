@@ -1,8 +1,9 @@
 const Joi = require('joi');
 const db = require('../data/db');
 
-const validCategories = () => {
-  return db('categories');
+const validCategories = async () => {
+  const categories = await db('categories');
+  return categories.map(cat => cat.id);
 };
 
 module.exports = {
@@ -25,16 +26,14 @@ module.exports = {
   remove: id => db('categories').where({ id }).del(),
   clear: () => db('categories').truncate(),
   schema: (cat, post) => {
-    const schema = post ?
-      // if post === true, do not require valid categories
-      Joi.object().keys({
-        name: Joi.string().max(128).required()
-      })
-      :
-      // otherwise, do
-      Joi.object().keys({
-        name: Joi.string().max(128).required().valid(validCategories())
-      });
+    let schema = {
+      name: Joi.string().max(128).required()
+    };
+
+    // must be a valid category id for editing since name will be different
+    if (!post) schema = Object.assign(schema, {
+      id: Joi.string().required().valid(validCategories()),
+    });
 
     return Joi.validate(cat, schema);
   }
