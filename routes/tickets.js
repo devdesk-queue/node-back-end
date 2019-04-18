@@ -111,6 +111,13 @@ router.delete(
  * [POST] /api/tickets/command
  * @payload - an object with title, description and student_id required props
  * @returns - an array with new ticket ID
+ */
+
+const signature = require('../slack_bot/verifySignature');
+const axios = require('axios');
+const debug = require('debug')('slash-command-template:index');
+const ticket = require('../slack_bot/ticket');
+const qs = require('querystring');
 
 router.post(
   '/command',
@@ -127,7 +134,7 @@ router.post(
         token: process.env.SLACK_ACCESS_TOKEN,
         trigger_id,
         dialog: JSON.stringify({
-          title: 'Submit a helpdesk ticket',
+          title: 'Submit a DevDesk queue ticket',
           callback_id: 'submit-ticket',
           submit_label: 'Submit',
           elements: [
@@ -136,30 +143,26 @@ router.post(
               type: 'text',
               name: 'title',
               value: text,
-              hint: '30 second summary of the problem',
+              hint: 'short summary of the problem',
             },
             {
               label: 'Description',
               type: 'textarea',
               name: 'description',
-              optional: true,
+              optional: false,
             },
             {
-              label: 'Urgency',
-              type: 'select',
-              name: 'urgency',
-              options: [
-                { label: 'Low', value: 'Low' },
-                { label: 'Medium', value: 'Medium' },
-                { label: 'High', value: 'High' },
-              ],
+              label: 'What I\'ve tried',
+              type: 'textarea',
+              name: 'Things I have tried before submiting the ticket',
+              optional: false,
             },
           ],
         }),
       };
 
       // open the dialog by calling dialogs.open method and sending the payload
-      axios.post(`${apiUrl}/dialog.open`, qs.stringify(dialog))
+      axios.post('https://devdeskqueue-slack-bot.herokuapp.com/dialog.open', qs.stringify(dialog))
         .then((result) => {
           debug('dialog.open: %o', result.data);
           res.send('');
@@ -174,6 +177,27 @@ router.post(
   }
 );
 
+/*
+ * Endpoint to receive the dialog submission. Checks the verification token
+ * and creates a Helpdesk ticket
  */
+router.post('/interactive', (req, res) => {
+  const body = JSON.parse(req.body.payload);
+
+  // check that the verification token matches expected value
+  if (signature.isVerified(req)) {
+    debug(`Form submission received: ${body.submission.trigger_id}`);
+
+    // immediately respond with a empty 200 response to let
+    // Slack know the command was received
+    res.send('');
+
+    // create Helpdesk ticket
+    ticket.create(body.user.id, body.submission);
+  } else {
+    debug('Token mismatch');
+    res.sendStatus(404);
+  }
+});
 
 module.exports = router;
