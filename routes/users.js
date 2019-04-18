@@ -96,7 +96,7 @@ router.delete(
   async ({ params: { id } }, res) => {
     const user = await Users.remove(id);
     if (user) {
-      res.status(200).json({ message: 'User was deleted.' });
+      res.status(200).json({ id, message: `User with ID ${id} was deleted.` });
     } else {
       res.status(404).json({ message: 'The user does not exist.' });
     }
