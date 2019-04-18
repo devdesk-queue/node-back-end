@@ -111,14 +111,69 @@ router.delete(
  * [POST] /api/tickets/command
  * @payload - an object with title, description and student_id required props
  * @returns - an array with new ticket ID
- */
+
 router.post(
   '/command',
   async (req, res) => {
-    res.end('Slack bot request');
+
+    // extract the slash command text, and trigger ID from payload
+    const { text, trigger_id } = req.body;
+
+    // Verify the signing secret
+    if (signature.isVerified(req)) {
+      // create the dialog payload - includes the dialog structure, Slack API token,
+      // and trigger ID
+      const dialog = {
+        token: process.env.SLACK_ACCESS_TOKEN,
+        trigger_id,
+        dialog: JSON.stringify({
+          title: 'Submit a helpdesk ticket',
+          callback_id: 'submit-ticket',
+          submit_label: 'Submit',
+          elements: [
+            {
+              label: 'Title',
+              type: 'text',
+              name: 'title',
+              value: text,
+              hint: '30 second summary of the problem',
+            },
+            {
+              label: 'Description',
+              type: 'textarea',
+              name: 'description',
+              optional: true,
+            },
+            {
+              label: 'Urgency',
+              type: 'select',
+              name: 'urgency',
+              options: [
+                { label: 'Low', value: 'Low' },
+                { label: 'Medium', value: 'Medium' },
+                { label: 'High', value: 'High' },
+              ],
+            },
+          ],
+        }),
+      };
+
+      // open the dialog by calling dialogs.open method and sending the payload
+      axios.post(`${apiUrl}/dialog.open`, qs.stringify(dialog))
+        .then((result) => {
+          debug('dialog.open: %o', result.data);
+          res.send('');
+        }).catch((err) => {
+          debug('dialog.open call failed: %o', err);
+          res.sendStatus(500);
+        });
+    } else {
+      debug('Verification token mismatch');
+      res.sendStatus(404);
+    }
   }
 );
 
-
+ */
 
 module.exports = router;
