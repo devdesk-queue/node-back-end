@@ -42,7 +42,7 @@ module.exports = {
   clear: () => db('users').truncate(),
   schema: user => {
     const schema = Joi.object().keys({
-      currentPassword: Joi.string().max(255).required(),
+      currentPassword: Joi.string().max(255),
       newPassword: Joi.string().max(255),
       email: Joi.string().email().max(255),
       username: Joi.string().max(255),
