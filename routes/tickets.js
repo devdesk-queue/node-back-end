@@ -23,7 +23,7 @@ router.post(
     // set student_id to authenticated user
     newTicket.student_id = user.subject;
     // check for status, update if missing
-    if (!newTicket.status) newTicket.status = 'inQueue';
+    if (!newTicket.status) newTicket.status = 'pending';
     const [ticketID] = await Tickets.add(newTicket);
     const category = await Categories.getByName(categoryName);
     if (category) {

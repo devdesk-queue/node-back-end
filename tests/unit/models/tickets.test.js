@@ -41,7 +41,7 @@ describe('tickets', () => {
       helper_id: 2
     });
     await Tickets.add({
-      status: 'open',
+      status: 'helping',
       title: 'problem2',
       description: 'big problem',
       tried: 'cry',
