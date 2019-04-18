@@ -20,6 +20,22 @@ module.exports = {
 
     return query;
   },
+  getStudent: ticketID => {
+    let query = db('users')
+      .join('tickets as t', 't.student_id', 'users.id')
+      .where('t.id', ticketID)
+      .select('username')
+      .first();
+    return query;
+  },
+  getHelper: ticketID => {
+    let query = db('users')
+      .join('tickets as t', 't.helper_id', 'users.id')
+      .where('t.id', ticketID)
+      .select('username')
+      .first();
+    return query;
+  },
   filter: query => db('users').where(query),
   update: (id, changes) => db('users').where({ id }).update(changes),
   remove: id => db('users').where({ id }).del(),
