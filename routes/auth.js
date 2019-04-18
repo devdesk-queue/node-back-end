@@ -45,12 +45,14 @@ router.post(
 
 router.post('/login', validate(schema), async ({ body: creds }, res) => {
   const { username, password } = creds;
-
   const [user] = await Users.filter({ username });
+
   if (user && bcrypt.compareSync(password, user.password)) {
     const token = generateToken(user);
+    delete user.password;
     res.status(200).json({
       message: `Welcome, ${username}!`,
+      user,
       token
     });
   } else {
