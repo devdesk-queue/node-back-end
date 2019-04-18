@@ -72,7 +72,7 @@ router.put(
     }
 
     // update role if provided & user is admin
-    if (changes.role && user.role === 'admin') {
+    if (changes.role && client.role === 'admin') {
       // check if role is valid
       const roles = await Roles.get();
       if (roles.find(role => role.name === changes.role)) {
