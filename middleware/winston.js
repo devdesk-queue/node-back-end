@@ -23,7 +23,6 @@ exports.logger = expressWinston.logger({
     if (statusCode >= 100) level = 'info';
     if (statusCode >= 400) level = 'warn';
     if (statusCode >= 500) level = 'error';
-    if (statusCode == 401 || statusCode == 403) level = 'critical';
     return level;
   }
 });
