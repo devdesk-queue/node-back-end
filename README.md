@@ -79,7 +79,13 @@ Example:
         "id": 3,
         "name": "User Interface III"
       }
-    ]
+    ],
+    "student": {
+      "username": "macjabeth"
+    },
+    "helper": {
+      "username": "admin"
+    }
   }
 ]
 ```
@@ -253,7 +259,8 @@ Example:
 
 ```js
 {
-  "message": "Category was deleted."
+  "id": 5,
+  "message": "Category with ID 5 was deleted."
 }
 ```
 
@@ -360,7 +367,8 @@ Example:
 
 ```js
 {
-  "message": "User was deleted."
+  "id": 5,
+  "message": "User with ID 5 was deleted."
 }
 ```
 
