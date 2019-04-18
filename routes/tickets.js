@@ -160,16 +160,16 @@ router.post(
           ],
         }),
       };
-
+      res.status(200).json({ dialog });
       // open the dialog by calling dialogs.open method and sending the payload
-      axios.post(`${apiUrl}/dialog.open`, qs.stringify(dialog))
-        .then((result) => {
-          debug('dialog.open: %o', result.data);
-          res.send('');
-        }).catch((err) => {
-          debug('dialog.open call failed: %o', err);
-          res.sendStatus(500);
-        });
+      // axios.post(`${apiUrl}/dialog.open`, qs.stringify(dialog))
+      //   .then((result) => {
+      //     debug('dialog.open: %o', result.data);
+      //     res.send('');
+      //   }).catch((err) => {
+      //     debug('dialog.open call failed: %o', err);
+      //     res.sendStatus(500);
+      //   });
     } else {
       debug('Verification token mismatch');
       res.sendStatus(404);
