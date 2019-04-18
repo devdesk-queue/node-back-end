@@ -108,9 +108,7 @@ router.delete(
 );
 
 /**
- * [POST] /api/tickets/command
- * @payload - an object with title, description and student_id required props
- * @returns - an array with new ticket ID
+ * Slack bot [POST] request
  */
 
 const signature = require('../slack_bot/verifySignature');
