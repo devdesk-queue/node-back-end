@@ -2,14 +2,13 @@
 
 # Resource: Authentication
 
-
 ## [POST] registration
 
-**URL:** /api/auth/register
+**URL:** `/api/auth/register`
 
 **Payload:** an object with the following properties.
 
-```json
+```js
 {
   "email": "whiskers@example.com",
   "username": "mr. kitty",
@@ -17,11 +16,11 @@
 }
 ```
 
-Returns an object with new user data.
+**Returns:** an object with user data and authentication token.
 
 Example:
 
-```json
+```js
 {
   "user": {
     "id": 6,
@@ -34,44 +33,32 @@ Example:
 }
 ```
 
-
 ## [POST] login
 
-**URL:** /api/auth/login
+**URL:** `/api/auth/login`
 
 **Payload:** an object with the following properties.
 
-```json
+```js
 {
   "username": "mr. kitty",
   "password": "purr"
 }
 ```
 
-Returns an object with user token.
-
-Example:
-
-```json
-{
-  "message": "Welcome, mr. kitty!",
-  "token": "<hidden>"
-}
-```
-
+**Returns:** an object with same data as [registration](#post-registration).
 
 # Resource: Tickets
 
-
 ## [GET] all tickets
 
-**URL:** /api/tickets
+**URL:** `/api/tickets`
 
-Returns an array of ticket objects.
+**Returns:** an array of ticket objects.
 
 Example:
 
-```json
+```js
 [
   {
     "id": 1,
@@ -100,13 +87,13 @@ Example:
 
 ## [GET] ticket by ID
 
-**URL:** /api/tickets/:id
+**URL:** `/api/tickets/:id`
 
-Returns a ticket object.
+**Returns:** a ticket object.
 
 Example:
 
-```json
+```js
 {
   "id": 1,
   "status": "resolved",
@@ -130,63 +117,81 @@ Example:
 }
 ```
 
-
 ## [POST] new ticket
 
-**URL:** /api/tickets
+**URL:** `/api/tickets`
 
 **Restricted:** User must be logged in.
 
 **Payload:** an object with the following properties.
 
-*Category* can be a string from pre-selected list!
-
-```json
+```js
 {
-  "title": "Please help",          // string, max 256 chars, required
-  "description": "I need help",    // string, required
-  "tried": "I tried this....",     // string, optional
-  "category": "JavaScript I",      // string, required
+  "title": "Please help",        // string, max 256 chars, required
+  "description": "I need help",  // string, required
+  "tried": "I tried this....",   // string, optional
+  "category": "JavaScript I",    // string, required
 }
 ```
 
-**Returns:** new ticket object.
+**Returns:** a new ticket object.
 
+Example:
+
+```js
+{
+  "id": 5,
+  "status": "inQueue",
+  "title": "Ticket Test",
+  "description": "Will this work?",
+  "tried": "Posting a new ticket.",
+  "student_id": 1,
+  "helper_id": null,
+  "created_at": "2019-04-18 00:22:41",
+  "updated_at": "2019-04-18 00:22:41",
+  "categories": [
+    {
+      "id": 40,
+      "name": "Inserting and Modifying Data"
+    }
+  ]
+}
+```
 
 ## [PUT] ticket
 
-**URL:** /api/tickets/:id
+**URL:** `/api/tickets/:id`
 
 **Restricted:** User must be logged in.
 
 **Authorisation:** User must be a helper, admin, or the student who created the ticket.
 
 **Payload:** an object with the `status` and `helper_id` property.
-Valid `status` values are "inQueue", "opened", "resolved" strings.
-`helper_id` is the user_id of helper user role, who is editing the ticket.
 
-```json
+Valid `status` values are "inQueue", "opened", "resolved" strings.
+
+The `helper_id` refers to the `user_id` of the user who was assigned to help resolve this ticket.
+
+```js
 {
-  "status": "inQueue",    // Required
-  "helper_id": 1          // Integer, Required.
+  "status": "inQueue",  // string, required
+  "helper_id": 1        // number, optional, defaults to user updating the ticket.
 }
 ```
 
-**Returns:** updated ticket object.
-
+**Returns:** a ticket object with the updated status.
 
 # Resource: Categories
 
-
 ## [GET] all categories
 
-**URL:** /api/categories
+**URL:** `/api/categories`
 
-Returns an array of categories objects.
+**Returns:** an array of category objects.
 
 Example:
 
-```json
+```js
 [
   {
     "id": 1,
@@ -199,10 +204,9 @@ Example:
 ]
 ```
 
-
 ## [POST] new category
 
-**URL:** /api/categories
+**URL:** `/api/categories`
 
 **Restricted:** User must be logged in.
 
@@ -210,7 +214,7 @@ Example:
 
 **Payload:** an object with the following properties.
 
-```json
+```js
 {
   "name": "React Native"
 }
@@ -218,11 +222,9 @@ Example:
 
 **Returns:** new category object.
 
-
-
 ## [PUT] edit category
 
-**URL:** /api/categories/:id
+**URL:** `/api/categories/:id`
 
 **Restricted:** User must be logged in.
 
@@ -230,19 +232,18 @@ Example:
 
 **Payload:** an object with the following properties.
 
-```json
+```js
 {
-  "name": "React Native"
+  "id": 40
+  "name": "Updated Category"
 }
 ```
 
 **Returns:** updated category object.
 
-
-
 ## [DELETE] category
 
-**URL:** /api/categories/:id
+**URL:** `/api/categories/:id`
 
 **Restricted:** User must be logged in.
 
@@ -250,107 +251,106 @@ Example:
 
 **Returns:** success message.
 
-```json
+```js
 {
   "message": "Category was deleted."
 }
 ```
 
-
 # Resource: Users
-
 
 ## [GET] all users
 
-**URL:** /api/users
+**URL:** `/api/users`
 
 **Restricted:** User must be logged in.
 
 **Authorisation:** User must be an admin.
 
-Returns an array of user objects.
+**Returns:** an array of user objects.
 
 Example:
 
-```json
+```js
 [
   {
     "id": 4,
     "email": "omar@kittycuddlers.net",
     "username": "kittycuddler",
-    "password": "$2a$10$msOd.CoK6PEk9hcq7/Ss0uoscsKkPy2N9faxvyxrCPixFqFSLIyvO",
     "role": "student",
-    "created_at": "2019-04-17 06:41:38"
+    "created_at": "2019-04-17 06:41:38",
+    "updated_at": "2019-04-17 06:41:38"
   },
   {
-      "id": 5,
-      "email": "whiskers@example.com",
-      "username": "mrKitty",
-      "password": "$2a$10$7HaI6cU9rViU6mbYZrP0rOgc4hTH166r/iYXqrI/WKyQqtgHgHTZq",
-      "role": "student",
-      "created_at": "2019-04-17 06:54:30"
+    "id": 5,
+    "email": "whiskers@example.com",
+    "username": "mrKitty",
+    "role": "student",
+    "created_at": "2019-04-17 06:54:30",
+    "updated_at": "2019-04-17 06:54:30"
   }
 ]
 ```
 
-
 ## [GET] user by ID
 
-**URL:** /api/users/:id
+**URL:** `/api/users/:id`
 
 **Restricted:** User must be logged in.
 
 **Authorisation:** User must be an admin or the user being fetched.
 
-Returns a user object.
+**Returns:** a user object.
 
 Example:
 
-```json
+```js
 {
   "id": 5,
   "email": "whiskers@example.com",
   "username": "mrKitty",
   "role": "student",
-  "created_at": "2019-04-17 06:54:30"
+  "created_at": "2019-04-17 06:54:30",
+  "updated_at": "2019-04-17 06:54:30"
 }
 ```
 
-
 ## [PUT] edit user
 
-**URL:** /api/users/:id
+**URL:** `/api/users/:id`
 
 **Restricted:** User must be logged in.
 
 **Authorisation:** User must be an admin or the user being edited.
 
-**Payload:** an object with one or both following properties.
+**Payload:** an object with the following properties.
 
-```json
+```js
 {
-  "password": "newSecretPasswordOver9000!",
-  "email": "joe@test.com"
+  "currentPassword": "currentuserpw",  // string, required
+  "newPassword": "clevernewpw",        // string, optional
+  "email": "professional@email.com",     // string, optional
+  "username": "Coolio",               // string, optional
+  "role": "helper",                    // string, optional (only admins can change this)
 }
 ```
 
 **Returns:** updated user object.
 
-```json
+```js
 {
   "id": 6,
-  "email": "joe@test.com",
-  "username": "Joe",
-  "role": "student",
+  "email": "professional@email.com",
+  "username": "Coolio",
+  "role": "helper",
   "created_at": "2019-04-17 10:06:14"
+  "updated_at": "2019-04-21 13:22:06"
 }
 ```
 
-
-
 ## [DELETE] user
 
-**URL:** /api/users/:id
+**URL:** `/api/users/:id`
 
 **Restricted:** User must be logged in.
 
@@ -358,25 +358,23 @@ Example:
 
 **Returns:** success message.
 
-```json
+```js
 {
   "message": "User was deleted."
 }
 ```
 
-
 # Resource: Roles
-
 
 ## [GET] all roles
 
-**URL:** /api/roles
+**URL:** `/api/roles`
 
-Returns an array of user roles.
+**Returns:** an array of user roles.
 
 Example:
 
-```json
+```js
 [
   {
     "id": 1,
