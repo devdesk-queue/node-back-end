@@ -12,7 +12,8 @@ exports.seed = knex =>
       title: 'problem2',
       description: 'big problem',
       tried: 'cry',
-      student_id: 4
+      student_id: 4,
+      helper_id: 3
     },
     {
       status: 'pending',

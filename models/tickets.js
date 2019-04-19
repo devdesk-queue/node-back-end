@@ -31,7 +31,7 @@ module.exports = {
   clear: () => db('tickets').truncate(),
   schema: async (ticket, post) => {
     let schema = {
-      status: Joi.string().valid('pending', 'helping', 'resolved'),
+      status: Joi.string().valid('pending', 'helping', 'resolved', 'archived'),
       helper_id: Joi.number().integer().positive()
     };
 
