@@ -153,7 +153,7 @@ router.post('/command', (req, res) => {
       token: process.env.SLACK_ACCESS_TOKEN,
       trigger_id,
       dialog: JSON.stringify({
-        title: 'Submit a DevDesk ticket to the queue',
+        title: 'Submit a DevDesk ticket',
         callback_id: 'submit-ticket',
         submit_label: 'Submit',
         elements: [
@@ -194,7 +194,7 @@ router.post('/command', (req, res) => {
     axios.post(`${apiUrl}/dialog.open`, qs.stringify(dialog))
       .then((result) => {
         debug('dialog.open: %o', result.data);
-        res.send(result.data);
+        res.send('');
       }).catch((err) => {
         debug('dialog.open call failed: %o', err);
         res.sendStatus(500);
