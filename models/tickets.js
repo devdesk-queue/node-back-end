@@ -39,7 +39,8 @@ module.exports = {
       title: Joi.string().max(256).required(),
       description: Joi.string().required(),
       tried: Joi.string(),
-      categories: Joi.array().items(Joi.string().valid(await validCategories()))
+      student_id: Joi.number().integer().required(),
+      category: Joi.array().items(Joi.string().valid(await validCategories()))
     });
 
     return Joi.validate(ticket, schema);

@@ -18,8 +18,8 @@ router.post(
   validate(Tickets.schema, true),
   async ({ body: newTicket, user }, res) => {
     // take out category from body into separate variable
-    const ticketCategories = newTicket.categories;
-    delete newTicket.categories;
+    const ticketCategories = newTicket.category;
+    delete newTicket.category;
     // set student_id to authenticated user
     newTicket.student_id = user.subject;
     // check for status, update if missing
