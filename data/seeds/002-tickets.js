@@ -8,21 +8,21 @@ exports.seed = knex =>
       student_id: 2
     },
     {
-      status: 'opened',
+      status: 'helping',
       title: 'problem2',
       description: 'big problem',
       tried: 'cry',
       student_id: 4
     },
     {
-      status: 'inQueue',
+      status: 'pending',
       title: 'problem3',
       description: 'big problem',
       tried: 'cry',
       student_id: 3
     },
     {
-      status: 'inQueue',
+      status: 'pending',
       title: 'problem4',
       description: 'big problem',
       tried: 'cry',

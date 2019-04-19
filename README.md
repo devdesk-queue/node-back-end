@@ -136,7 +136,7 @@ Example:
   "title": "Please help",        // string, max 256 chars, required
   "description": "I need help",  // string, required
   "tried": "I tried this....",   // string, optional
-  "category": "JavaScript I",    // string, required
+  "categories": ["JavaScript I"],  // array, required
 }
 ```
 
@@ -147,7 +147,7 @@ Example:
 ```js
 {
   "id": 5,
-  "status": "inQueue",
+  "status": "pending",
   "title": "Ticket Test",
   "description": "Will this work?",
   "tried": "Posting a new ticket.",
@@ -174,13 +174,13 @@ Example:
 
 **Payload:** an object with the `status` and `helper_id` property.
 
-Valid `status` values are "inQueue", "opened", "resolved" strings.
+Valid `status` values are "pending", "helping", "resolved" strings.
 
 The `helper_id` refers to the `user_id` of the user who was assigned to help resolve this ticket.
 
 ```js
 {
-  "status": "inQueue",  // string, required
+  "status": "pending",  // string, required
   "helper_id": 1        // number, optional, defaults to user updating the ticket.
 }
 ```

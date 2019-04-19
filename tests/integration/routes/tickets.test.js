@@ -39,7 +39,7 @@ describe('/api/tickets', () => {
     });
 
     await Tickets.add({
-      status: 'inQueue',
+      status: 'pending',
       title: 'First ticket',
       description: 'I need help',
       tried: 'I tried this....',
@@ -47,7 +47,7 @@ describe('/api/tickets', () => {
     });
 
     await Tickets.add({
-      status: 'inQueue',
+      status: 'pending',
       title: 'Second ticket',
       description: 'I need help',
       tried: 'I tried this....',
@@ -128,7 +128,7 @@ describe('/api/tickets', () => {
         .post('/api/tickets')
         .set('authorization', token)
         .send({
-          status: 'opened',
+          status: 'helping',
           title: 'Third ticket',
           description: 'I need help',
           tried: 'I tried this....',
@@ -142,7 +142,7 @@ describe('/api/tickets', () => {
         .post('/api/tickets')
         .set('authorization', token)
         .send({
-          status: 'opened',
+          status: 'helping',
           title: 'Fourth ticket',
           description: 'I need help',
           tried: 'I tried this....',
@@ -157,7 +157,7 @@ describe('/api/tickets', () => {
         .post('/api/tickets')
         .set('authorization', token)
         .send({
-          status: 'opened',
+          status: 'helping',
           title: 'Fifth ticket',
           description: 'I need help',
           tried: 'I tried this....',
@@ -187,7 +187,7 @@ describe('/api/tickets', () => {
       const res = await request(server)
         .put('/api/tickets/0')
         .set('authorization', token)
-        .send({ status: 'opened', helper_id: 1 });
+        .send({ status: 'helping', helper_id: 1 });
       expect(res.status).toBe(404);
     });
 
