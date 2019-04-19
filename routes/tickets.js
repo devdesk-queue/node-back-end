@@ -221,7 +221,7 @@ router.post('/interactive', (req, res) => {
     res.send('');
 
     // create DevDesk ticket
-    ticket.create(body.user.id, body.submission);
+    // ticket.create(body.user.id, body.submission);
     ticket.createSlackTicketInDb(body.user.id, body.submission);
   } else {
     debug('Token mismatch');
