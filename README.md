@@ -136,7 +136,7 @@ Example:
   "title": "Please help",        // string, max 256 chars, required
   "description": "I need help",  // string, required
   "tried": "I tried this....",   // string, optional
-  "category": "JavaScript I",    // string, required
+  "categories": ["JavaScript I"],  // array, required
 }
 ```
 

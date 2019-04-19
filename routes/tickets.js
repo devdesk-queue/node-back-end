@@ -18,21 +18,23 @@ router.post(
   validate(Tickets.schema, true),
   async ({ body: newTicket, user }, res) => {
     // take out category from body into separate variable
-    const categoryName = newTicket.category;
-    delete newTicket.category;
+    const ticketCategories = newTicket.categories;
+    delete newTicket.categories;
     // set student_id to authenticated user
     newTicket.student_id = user.subject;
     // check for status, update if missing
     if (!newTicket.status) newTicket.status = 'pending';
     const [ticketID] = await Tickets.add(newTicket);
-    const category = await Categories.getByName(categoryName);
-    if (category) {
-      // create new ticket-category relationship
-      await CategorizedTickets.add(ticketID, category.id);
+    if (ticketID) {
+      // create new ticket-category relationships
+      for (let category of ticketCategories) {
+        category = await Categories.getByName(category);
+        if (category) await CategorizedTickets.add(ticketID, category.id);
+      }
       const [ticket] = await Tickets.get(ticketID);
       res.status(201).json(ticket);
     } else {
-      res.status(404).json({ message: 'This category does not exist' });
+      res.status(400).json({ message: 'The ticket could not be submitted.' });
     }
   }
 );

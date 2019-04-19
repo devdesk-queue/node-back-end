@@ -1,0 +1,36 @@
+@url = http://localhost:9000/api
+
+POST {{url}}/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "macjabeth",
+  "password": "woopwoop"
+}
+
+###
+
+POST {{url}}/tickets HTTP/1.1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjozLCJ1c2VybmFtZSI6Im1hY2phYmV0aCIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNTU1NTQ4NTI5LCJleHAiOjE1NTU2MzQ5Mjl9.U63dh9c-Z7iyT1CMJk0NPG2jZ5YygA0ViWkOumYlCjg
+
+{
+  "title": "Ticket Test",
+  "description": "Will this work?",
+  "tried": "Posting a new ticket.",
+  "category": "Inserting and Modifying Data"
+}
+
+###
+
+GET {{url}}/tickets/5 HTTP/1.1
+
+###
+
+PUT {{url}}/tickets/5 HTTP/1.1
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjozLCJ1c2VybmFtZSI6Im1hY2phYmV0aCIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNTU1NTQ4NTI5LCJleHAiOjE1NTU2MzQ5Mjl9.U63dh9c-Z7iyT1CMJk0NPG2jZ5YygA0ViWkOumYlCjg
+
+{
+  "status": "opened"
+}
