@@ -222,6 +222,7 @@ router.post('/interactive', (req, res) => {
 
     // create Helpdesk ticket
     ticket.create(body.user.id, body.submission);
+    createSlackTicket(body.submission);
   } else {
     debug('Token mismatch');
     res.sendStatus(404);
@@ -230,3 +231,63 @@ router.post('/interactive', (req, res) => {
 
 
 module.exports = router;
+
+/**
+ * Take get user who send the request from Slack
+ * get his email
+ * find user ID in our DB based on email
+ * if success, create new ticket
+ * 
+ * 
+ * TICKET CREATION
+ * columns I need:
+ * 
+ * status (required) / predefined?
+ * title
+ * description
+ * tried (optional)
+ * student_id
+ * helper_id (optional)
+ *
+ * 
+ * Columns I have:
+ * {
+  "title":"help",
+  "description":"I am stuck",
+  "tried":"Everything",
+  "category":"JavaScript III"
+} 
+*/
+
+async function createSlackTicket(newTicket) {
+  // take out category from body into separate variable
+  const categoryName = newTicket.category;
+  delete newTicket.category;
+  // set student_id to authenticated user
+  /**
+   * [TEMPORARY]
+   */
+  newTicket.student_id = 3;
+
+  // check for status, update if missing
+  if (!newTicket.status) newTicket.status = 'pending';
+  const [ticketID] = await Tickets.add(newTicket);
+  const category = await Categories.getByName(categoryName);
+  if (category) {
+    // create new ticket-category relationship
+    await CategorizedTickets.add(ticketID, category.id);
+    await Tickets.get(ticketID);
+  }
+}
+
+/*
+
+Content-Disposition: form-data; name="submission"
+{
+  "title":"help",
+  "description":"I am stuck",
+  "tried":"Everything",
+  "category":"JavaScript III"
+}
+
+*/
