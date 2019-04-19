@@ -174,7 +174,7 @@ Example:
 
 **Payload:** an object with the `status` and `helper_id` property.
 
-Valid `status` values are "pending", "helping", "resolved" strings.
+Valid `status` values are "pending", "helping", "resolved", "archived" strings.
 
 The `helper_id` refers to the `user_id` of the user who was assigned to help resolve this ticket.
 
