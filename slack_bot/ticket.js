@@ -84,49 +84,54 @@ const create = (userId, submission) => {
 };
 
 async function createSlackTicketInDb(userSlackId, newTicket) {
-  // take out category from body into separate variable
-  const categoryName = newTicket.category;
-  delete newTicket.category;
+  try {
+    // take out category from body into separate variable
+    const categoryName = newTicket.category;
+    delete newTicket.category;
 
-  const fetchUserEmail = new Promise((resolve, reject) => {
-    users.find(userSlackId).then((result) => {
-      debug(`Find user: ${userSlackId}`);
-      resolve({
-        slackUserEmail: result.data.user.profile.email,
-        slackUserName: result.data.user.profile.display_name_normalized
-      });
-    }).catch((err) => { reject(err); });
-  });
-
-  // get users email and user name from Slack
-  const slackUserInfo = {};
-  fetchUserEmail.then(result => {
-    slackUserInfo.name = result.slackUserName;
-    slackUserInfo.email = result.slackUserEmail;
-    // eslint-disable-next-line no-console
-  }).catch((err) => { console.error(err); });
-  // find matching slack email in our users database
-  const [existingUser] = await Users.filter(slackUserInfo.email);
-
-  // if the slack mail is not in our DB, create new user
-  if (!existingUser) {
-    const [id] = await Users.add({
-      password: bcrypt.hashSync(slackUserInfo.name, 10),
-      email: slackUserInfo.email,
-      username: slackUserInfo.name
+    const fetchUserEmail = new Promise((resolve, reject) => {
+      users.find(userSlackId).then((result) => {
+        debug(`Find user: ${userSlackId}`);
+        resolve({
+          slackUserEmail: result.data.user.profile.email,
+          slackUserName: result.data.user.profile.display_name_normalized
+        });
+      }).catch((err) => { reject(err); });
     });
-    // set student_id to new ticket
-    newTicket.student_id = id;
-  }
 
-  // check for status, update if missing
-  if (!newTicket.status) newTicket.status = 'pending';
-  const [ticketID] = await Tickets.add(newTicket);
-  const category = await Categories.getByName(categoryName);
-  if (category) {
-    // create new ticket-category relationship
-    await CategorizedTickets.add(ticketID, category.id);
-    await Tickets.get(ticketID);
+    // get users email and user name from Slack
+    const slackUserInfo = {};
+    fetchUserEmail.then(result => {
+      slackUserInfo.name = result.slackUserName;
+      slackUserInfo.email = result.slackUserEmail;
+      // eslint-disable-next-line no-console
+    }).catch((err) => { console.error(err); });
+    // find matching slack email in our users database
+    const [existingUser] = await Users.filter(slackUserInfo.email);
+
+    // if the slack mail is not in our DB, create new user
+    if (!existingUser) {
+      const [id] = await Users.add({
+        password: bcrypt.hashSync(slackUserInfo.name, 10),
+        email: slackUserInfo.email,
+        username: slackUserInfo.name
+      });
+      // set student_id to new ticket
+      newTicket.student_id = id;
+    }
+
+    // check for status, update if missing
+    if (!newTicket.status) newTicket.status = 'pending';
+    const [ticketID] = await Tickets.add(newTicket);
+    const category = await Categories.getByName(categoryName);
+    if (category) {
+      // create new ticket-category relationship
+      await CategorizedTickets.add(ticketID, category.id);
+      await Tickets.get(ticketID);
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error(err);
   }
 }
 
