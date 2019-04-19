@@ -9,7 +9,7 @@ exports.up = knex => knex.schema
   })
   .createTable('tickets', table => {
     table.increments();
-    // predefined set of options: pending/helping/resolved
+    // predefined set of options: pending/helping/resolved/archived
     table.string('status', 128).notNullable();
     table.string('title', 256).notNullable();
     table.text('description').notNullable();
