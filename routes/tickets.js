@@ -109,4 +109,126 @@ router.delete(
   }
 );
 
+/**
+ * Slack bot [POST] requests
+ */
+
+const signature = require('../slack_bot/verifySignature');
+const ticket = require('../slack_bot/ticket');
+const axios = require('axios');
+const bodyParser = require('body-parser');
+const qs = require('querystring');
+const debug = require('debug')('slash-command-template:index');
+
+const apiUrl = 'https://slack.com/api';
+
+/*
+ * Parse application/x-www-form-urlencoded && application/json
+ * Use body-parser's `verify` callback to export a parsed raw body
+ * that you need to use to verify the signature
+ */
+
+const rawBodyBuffer = (req, res, buf, encoding) => {
+  if (buf && buf.length) {
+    req.rawBody = buf.toString(encoding || 'utf8');
+  }
+};
+
+router.use(bodyParser.urlencoded({ verify: rawBodyBuffer, extended: true }));
+router.use(bodyParser.json({ verify: rawBodyBuffer }));
+
+/*
+ * Endpoint to receive /devdesk slash command from Slack.
+ * Checks verification token and opens a dialog to capture more info.
+ */
+router.post('/command', (req, res) => {
+  // extract the slash command text, and trigger ID from payload
+  const { text, trigger_id } = req.body;
+
+  // Verify the signing secret
+  if (signature.isVerified(req)) {
+    // create the dialog payload - includes the dialog structure, Slack API token,
+    // and trigger ID
+    const dialog = {
+      token: process.env.SLACK_ACCESS_TOKEN,
+      trigger_id,
+      dialog: JSON.stringify({
+        title: 'Submit a DevDesk ticket',
+        callback_id: 'submit-ticket',
+        submit_label: 'Submit',
+        elements: [
+          {
+            label: 'Title',
+            type: 'text',
+            name: 'title',
+            value: text,
+            hint: '30 second summary of the problem',
+          },
+          {
+            label: 'Description',
+            type: 'textarea',
+            name: 'description',
+            optional: true,
+          },
+          {
+            label: 'What I\'ve tried',
+            type: 'textarea',
+            name: 'tried',
+            optional: true,
+          },
+          {
+            label: 'Category',
+            type: 'select',
+            name: 'category',
+            options: [
+              { label: 'JavaScript I', value: 'JavaScript I' },
+              { label: 'JavaScript II', value: 'JavaScript II' },
+              { label: 'JavaScript III', value: 'JavaScript III' },
+            ],
+          },
+        ],
+      }),
+    };
+
+    // open the dialog by calling dialogs.open method and sending the payload
+    axios.post(`${apiUrl}/dialog.open`, qs.stringify(dialog))
+      .then((result) => {
+        debug('dialog.open: %o', result.data);
+        res.send('');
+      }).catch((err) => {
+        debug('dialog.open call failed: %o', err);
+        res.sendStatus(500);
+      });
+  } else {
+    debug('Verification token mismatch');
+    res.sendStatus(404);
+  }
+});
+
+/*
+ * Endpoint to receive the dialog submission. Checks the verification token
+ * and creates a DevDesk ticket
+ */
+router.post('/interactive', (req, res) => {
+  const body = JSON.parse(req.body.payload);
+
+  // check that the verification token matches expected value
+  if (signature.isVerified(req)) {
+    debug(`Form submission received: ${body.submission.trigger_id}`);
+
+    // immediately respond with a empty 200 response to let
+    // Slack know the command was received
+    res.send('');
+
+    // create DevDesk ticket in Slack
+    ticket.create(body.user.id, body.submission);
+    // create DevDesk ticket in DB
+    ticket.createSlackTicketInDb(body.user.id, body.submission);
+  } else {
+    debug('Token mismatch');
+    res.sendStatus(404);
+  }
+});
+
+
 module.exports = router;
