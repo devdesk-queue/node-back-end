@@ -94,7 +94,7 @@ async function createSlackTicketInDb(userSlackId, newTicket) {
         debug(`Find user: ${userSlackId}`);
         resolve({
           slackUserEmail: result.data.user.profile.email,
-          slackUserName: result.data.user.profile.display_name_normalized
+          slackUserName: result.data.user.profile.real_name_normalized
         });
       }).catch((err) => { reject(err); });
     });
