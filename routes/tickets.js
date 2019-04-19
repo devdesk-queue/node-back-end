@@ -138,7 +138,7 @@ router.use(bodyParser.urlencoded({ verify: rawBodyBuffer, extended: true }));
 router.use(bodyParser.json({ verify: rawBodyBuffer }));
 
 /*
- * Endpoint to receive /helpdesk slash command from Slack.
+ * Endpoint to receive /devdesk slash command from Slack.
  * Checks verification token and opens a dialog to capture more info.
  */
 router.post('/command', (req, res) => {
@@ -207,7 +207,7 @@ router.post('/command', (req, res) => {
 
 /*
  * Endpoint to receive the dialog submission. Checks the verification token
- * and creates a Helpdesk ticket
+ * and creates a DevDesk ticket
  */
 router.post('/interactive', (req, res) => {
   const body = JSON.parse(req.body.payload);
@@ -220,9 +220,9 @@ router.post('/interactive', (req, res) => {
     // Slack know the command was received
     res.send('');
 
-    // create Helpdesk ticket
+    // create DevDesk ticket
     ticket.create(body.user.id, body.submission);
-    createSlackTicket(body.submission);
+    ticket.createSlackTicketInDb(body.user.id, body.submission);
   } else {
     debug('Token mismatch');
     res.sendStatus(404);
@@ -237,57 +237,7 @@ module.exports = router;
  * get his email
  * find user ID in our DB based on email
  * if success, create new ticket
- * 
- * 
- * TICKET CREATION
- * columns I need:
- * 
- * status (required) / predefined?
- * title
- * description
- * tried (optional)
- * student_id
- * helper_id (optional)
+ * if user(email) does not exist in DB,
+ * create new user. username will be slack username?
  *
- * 
- * Columns I have:
- * {
-  "title":"help",
-  "description":"I am stuck",
-  "tried":"Everything",
-  "category":"JavaScript III"
-} 
-*/
-
-async function createSlackTicket(newTicket) {
-  // take out category from body into separate variable
-  const categoryName = newTicket.category;
-  delete newTicket.category;
-  // set student_id to authenticated user
-  /**
-   * [TEMPORARY]
-   */
-  newTicket.student_id = 3;
-
-  // check for status, update if missing
-  if (!newTicket.status) newTicket.status = 'pending';
-  const [ticketID] = await Tickets.add(newTicket);
-  const category = await Categories.getByName(categoryName);
-  if (category) {
-    // create new ticket-category relationship
-    await CategorizedTickets.add(ticketID, category.id);
-    await Tickets.get(ticketID);
-  }
-}
-
-/*
-
-Content-Disposition: form-data; name="submission"
-{
-  "title":"help",
-  "description":"I am stuck",
-  "tried":"Everything",
-  "category":"JavaScript III"
-}
-
 */

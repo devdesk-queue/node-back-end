@@ -1,7 +1,12 @@
 const axios = require('axios');
 const debug = require('debug')('slash-command-template:ticket');
 const qs = require('querystring');
+const bcrypt = require('bcryptjs');
 const users = require('./users');
+const Tickets = require('../models/tickets');
+const Categories = require('../models/categories');
+const CategorizedTickets = require('../models/categorizedTickets');
+const Users = require('../models/users');
 
 /*
  *  Send ticket creation confirmation via
@@ -12,11 +17,10 @@ const sendConfirmation = (ticket) => {
     token: process.env.SLACK_ACCESS_TOKEN,
     channel: ticket.userId,
     as_user: true,
-    text: 'Helpdesk ticket created!',
+    text: 'DevDesk ticket created!',
     attachments: JSON.stringify([
       {
         title: `Ticket created for ${ticket.userEmail}`,
-        // Get this from the 3rd party helpdesk system
         title_link: 'https://devdeskqueue-slack-bot.herokuapp.com/api/tickets',
         text: ticket.text,
         fields: [
@@ -53,7 +57,7 @@ const sendConfirmation = (ticket) => {
   });
 };
 
-// Create helpdesk ticket. Call users.find to get the user's email address
+// Create devdesk ticket. Call users.find to get the user's email address
 // from their user ID
 const create = (userId, submission) => {
   const ticket = {};
@@ -65,7 +69,7 @@ const create = (userId, submission) => {
     }).catch((err) => { reject(err); });
   });
 
-  fetchUserEmail.then((result) => {
+  fetchUserEmail.then(result => {
     ticket.userId = userId;
     ticket.userEmail = result;
     ticket.title = submission.title;
@@ -79,4 +83,52 @@ const create = (userId, submission) => {
   }).catch((err) => { console.error(err); });
 };
 
-module.exports = { create, sendConfirmation };
+async function createSlackTicketInDb(userSlackId, newTicket) {
+  // take out category from body into separate variable
+  const categoryName = newTicket.category;
+  delete newTicket.category;
+
+  const fetchUserEmail = new Promise((resolve, reject) => {
+    users.find(userSlackId).then((result) => {
+      debug(`Find user: ${userSlackId}`);
+      resolve({
+        slackUserEmail: result.data.user.profile.email,
+        slackUserName: result.data.user.profile.display_name_normalized
+      });
+    }).catch((err) => { reject(err); });
+  });
+
+  // get users email and user name from Slack
+  const slackUserInfo = {};
+  fetchUserEmail.then(result => {
+    slackUserInfo.name = result.slackUserName;
+    slackUserInfo.email = result.slackUserEmail;
+    // eslint-disable-next-line no-console
+  }).catch((err) => { console.error(err); });
+  // find matching slack email in our users database
+  const [existingUser] = await Users.filter(slackUserInfo.email);
+
+  // if the slack mail is not in our DB, create new user
+  if (!existingUser) {
+    const [id] = await Users.add({
+      password: bcrypt.hashSync(slackUserInfo.name, 10),
+      email: slackUserInfo.email,
+      username: slackUserInfo.name
+    });
+    // set student_id to new ticket
+    newTicket.student_id = id;
+  }
+
+  // check for status, update if missing
+  if (!newTicket.status) newTicket.status = 'pending';
+  const [ticketID] = await Tickets.add(newTicket);
+  const category = await Categories.getByName(categoryName);
+  if (category) {
+    // create new ticket-category relationship
+    await CategorizedTickets.add(ticketID, category.id);
+    await Tickets.get(ticketID);
+  }
+}
+
+
+module.exports = { create, sendConfirmation, createSlackTicketInDb };
