@@ -3,6 +3,11 @@ const categoriesDB = require('./categories');
 const usersDB = require('./users');
 const db = require('../data/db');
 
+const validCategories = async () => {
+  const categories = await db('categories');
+  return categories.map(cat => cat.name);
+};
+
 module.exports = {
   add: ticket => db('tickets').insert(ticket).returning('id'),
   get: async id => {
@@ -24,7 +29,7 @@ module.exports = {
   update: (id, changes) => db('tickets').where({ id }).update(changes),
   remove: id => db('tickets').where({ id }).del(),
   clear: () => db('tickets').truncate(),
-  schema: (ticket, post) => {
+  schema: async (ticket, post) => {
     let schema = {
       status: Joi.string().valid('pending', 'helping', 'resolved'),
       helper_id: Joi.number().integer().positive()
@@ -34,7 +39,7 @@ module.exports = {
       title: Joi.string().max(256).required(),
       description: Joi.string().required(),
       tried: Joi.string(),
-      category: Joi.string().required()
+      categories: Joi.array().items(Joi.string().valid(await validCategories()))
     });
 
     return Joi.validate(ticket, schema);
