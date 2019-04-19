@@ -59,18 +59,18 @@ const sendConfirmation = (ticket) => {
 
 // Create devdesk ticket. Call users.find to get the user's email address
 // from their user ID
-const create = (userId, submission) => {
+const create = (userSlackId, submission) => {
   const ticket = {};
 
   const fetchUserEmail = new Promise((resolve, reject) => {
-    users.find(userId).then((result) => {
-      debug(`Find user: ${userId}`);
+    users.find(userSlackId).then((result) => {
+      debug(`Find user: ${userSlackId}`);
       resolve(result.data.user.profile.email);
     }).catch((err) => { reject(err); });
   });
 
   fetchUserEmail.then(result => {
-    ticket.userId = userId;
+    ticket.userId = userSlackId;
     ticket.userEmail = result;
     ticket.title = submission.title;
     ticket.description = submission.description;
@@ -89,35 +89,24 @@ async function createSlackTicketInDb(userSlackId, newTicket) {
     const categoryName = newTicket.category;
     delete newTicket.category;
 
-    const fetchUserEmail = new Promise((resolve, reject) => {
-      users.find(userSlackId).then((result) => {
-        debug(`Find user: ${userSlackId}`);
-        resolve({
-          slackUserEmail: result.data.user.profile.email,
-          slackUserName: result.data.user.profile.real_name_normalized
-        });
-      }).catch((err) => { reject(err); });
-    });
-
     // get users email and user name from Slack
-    const slackUserInfo = {};
-    fetchUserEmail.then(result => {
-      slackUserInfo.name = result.slackUserName;
-      slackUserInfo.email = result.slackUserEmail;
-      // eslint-disable-next-line no-console
-    }).catch((err) => { console.error(err); });
+    const slackUserInfo = await users.find(userSlackId);
+    const { email, real_name_normalized: name } = slackUserInfo.data.user.profile;
+
     // find matching slack email in our users database
-    const [existingUser] = await Users.filter(slackUserInfo.email);
+    const [existingUser] = await Users.filter({ email: email });
 
     // if the slack mail is not in our DB, create new user
     if (!existingUser) {
       const [id] = await Users.add({
-        password: bcrypt.hashSync(slackUserInfo.name, 10),
-        email: slackUserInfo.email,
-        username: slackUserInfo.name
+        password: bcrypt.hashSync(name, 10),
+        email,
+        username: name
       });
       // set student_id to new ticket
       newTicket.student_id = id;
+    } else {
+      newTicket.student_id = existingUser.id;
     }
 
     // check for status, update if missing

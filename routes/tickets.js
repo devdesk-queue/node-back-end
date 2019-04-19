@@ -111,10 +111,8 @@ router.delete(
  * Slack bot [POST] requests
  */
 
-
 const signature = require('../slack_bot/verifySignature');
 const ticket = require('../slack_bot/ticket');
-
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const qs = require('querystring');
@@ -220,8 +218,9 @@ router.post('/interactive', (req, res) => {
     // Slack know the command was received
     res.send('');
 
-    // create DevDesk ticket
-    // ticket.create(body.user.id, body.submission);
+    // create DevDesk ticket in Slack
+    ticket.create(body.user.id, body.submission);
+    // create DevDesk ticket in DB
     ticket.createSlackTicketInDb(body.user.id, body.submission);
   } else {
     debug('Token mismatch');
@@ -231,13 +230,3 @@ router.post('/interactive', (req, res) => {
 
 
 module.exports = router;
-
-/**
- * Take get user who send the request from Slack
- * get his email
- * find user ID in our DB based on email
- * if success, create new ticket
- * if user(email) does not exist in DB,
- * create new user. username will be slack username?
- *
-*/
