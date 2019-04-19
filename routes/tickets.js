@@ -153,7 +153,7 @@ router.post('/command', (req, res) => {
       token: process.env.SLACK_ACCESS_TOKEN,
       trigger_id,
       dialog: JSON.stringify({
-        title: 'Submit a DevDesk ticket to queue',
+        title: 'Submit a DevDesk ticket to the queue',
         callback_id: 'submit-ticket',
         submit_label: 'Submit',
         elements: [
@@ -171,19 +171,25 @@ router.post('/command', (req, res) => {
             optional: true,
           },
           {
-            label: 'Urgency',
+            label: 'What I\'ve tried',
+            type: 'textarea',
+            name: 'tried',
+            optional: true,
+          },
+          {
+            label: 'Category',
             type: 'select',
-            name: 'urgency',
+            name: 'category',
             options: [
-              { label: 'Low', value: 'Low' },
-              { label: 'Medium', value: 'Medium' },
-              { label: 'High', value: 'High' },
+              { label: 'JavaScript I', value: 'JavaScript I' },
+              { label: 'JavaScript II', value: 'JavaScript II' },
+              { label: 'JavaScript III', value: 'JavaScript III' },
             ],
           },
         ],
       }),
     };
-    console.log('verification passed');
+
     // open the dialog by calling dialogs.open method and sending the payload
     axios.post(`${apiUrl}/dialog.open`, qs.stringify(dialog))
       .then((result) => {
